@@ -1,3 +1,5 @@
+@import '~@ya.praktikum/react-developer-burger-ui-components/dist/ui/fonts/fonts.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +7,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --text-primary-light: #f2f2f3;
+  --text-dark-grey: #8585ad;
 }
 
 code {

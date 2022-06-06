@@ -1,0 +1,14 @@
+.nav_item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
+
+.active {
+  color: var(--text-primary-light);
+}
+
+.inactive {
+  color: var(--text-dark-grey);
+}

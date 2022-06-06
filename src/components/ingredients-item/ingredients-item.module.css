@@ -1,0 +1,32 @@
+.ingredients_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 272px;
+  height: 208px;
+
+}
+
+.ingredients_image {
+
+}
+
+.ingredients_cost_wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 3px;
+}
+
+.ingredients_cost {
+
+}
+
+.ingredients_title {
+  padding-top: 4px;
+}
+
+.ingredients_qty {
+
+}

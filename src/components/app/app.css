@@ -1,0 +1,9 @@
+.app {
+  /*margin: 0 auto;*/
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
