@@ -8,10 +8,10 @@ import PropTypes from "prop-types";
 import styles from "./nav-item.module.css";
 
 const NavItem = ({ title, logo, active, type }) => {
-  const icon = {
-    burger: () => <BurgerIcon type={type} />,
-    list: () => <ListIcon type={type} />,
-    profile: () => <ProfileIcon type={type} />,
+  const icons = {
+    burger: <BurgerIcon type={type} />,
+    list: <ListIcon type={type} />,
+    profile: <ProfileIcon type={type} />,
   };
 
   const navItemStyle = `text text_type_main-default pl-2 ${
@@ -20,7 +20,7 @@ const NavItem = ({ title, logo, active, type }) => {
 
   return (
     <a href="#" className={`${styles.nav_item} pr-5 pl-5 pt-4 pb-4`}>
-      {icon[logo]()}
+      {icons[logo]}
       <p className={navItemStyle}>{title}</p>
     </a>
   );

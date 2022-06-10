@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
@@ -6,9 +6,18 @@ import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
 
 const BurgerIngredients = ({ data }) => {
-  const mainIngredientsArray = data.filter((el) => el.type === "main");
-  const bunIngredientsArray = data.filter((el) => el.type === "bun");
-  const sauceIngredientsArray = data.filter((el) => el.type === "sauce");
+  const mainIngredientsArray = useMemo(
+    () => data.filter((el) => el.type === "main"),
+    [data]
+  );
+  const bunIngredientsArray = useMemo(
+    () => data.filter((el) => el.type === "bun"),
+    [data]
+  );
+  const sauceIngredientsArray = useMemo(
+    () => data.filter((el) => el.type === "sauce"),
+    [data]
+  );
 
   return (
     <section className={`${styles.burger_ingredients}`}>

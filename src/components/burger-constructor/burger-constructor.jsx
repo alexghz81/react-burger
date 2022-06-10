@@ -9,52 +9,46 @@ import {
 import { ingredientPropType } from "../../utils/prop-types";
 
 const BurgerConstructor = ({ data }) => {
-  const getBun = (data, position, posDesc) => {
-    console.log(data);
-    const bun = data.find((item) => item.type === "bun");
-    return (
-      <li>
-        <ConstructorElement
-          text={`${bun.name} ${posDesc}`}
-          type={position}
-          isLocked={true}
-          price={bun.price}
-          thumbnail={bun.image}
-        />
-      </li>
-    );
-  };
-
-  const getIngredients = (data) => {
-    const ingredientsArray = data.map((item) => {
-      if (item.type === "bun") return;
-      const { _id, name, price, image, type } = item;
-      const res = [];
-      res.push(
-        <li className={styles.ingredients_item} key={_id}>
-          <DragIcon type={"primary"} />
-          <ConstructorElement text={name} thumbnail={image} price={price} />
-        </li>
-      );
-      return res;
-    });
-    return [...ingredientsArray];
-  };
+  const bun = data.find((el) => el.type === "bun");
+  const ingredients = data.filter((el) => el.type !== "bun");
 
   return (
     <section className={`${styles.burger_constructor} pt-25`}>
       <ul
         className={`${styles.burger_constructor_item} ${styles.position_top}`}
       >
-        {getBun(data, "top", "(верх)")}
+        <ConstructorElement
+          text={`${bun.name} (верх)`}
+          type={"top"}
+          isLocked={true}
+          thumbnail={bun.image}
+          price={bun.price}
+        />
       </ul>
       <ul className={`${styles.burger_constructor_items} pl-4 pr-2`}>
-        {getIngredients(data)}
+        {ingredients.map((el) => {
+          return (
+            <li className={styles.ingredients_item} key={el._id}>
+              <DragIcon type={"primary"} />
+              <ConstructorElement
+                text={el.name}
+                thumbnail={el.image}
+                price={el.price}
+              />
+            </li>
+          );
+        })}
       </ul>
       <ul
         className={`${styles.burger_constructor_item} ${styles.position_top}`}
       >
-        {getBun(data, "bottom", "(низ)")}
+        <ConstructorElement
+          text={`${bun.name} (низ)`}
+          type={"bottom"}
+          isLocked={true}
+          thumbnail={bun.image}
+          price={bun.price}
+        />
       </ul>
       <div className={`${styles.burger_constructor_cost} mt-11 mr-4`}>
         <div className={`${styles.cost} mr-10`}>
