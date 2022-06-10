@@ -8,7 +8,9 @@ export default function OrderDetails() {
       <h3 className={`${styles.order_number} text_type_digits-large`}>
         034536
       </h3>
-      <p className={`text_type_main-medium mt-8`}>идентификатор заказа</p>
+      <p className={`${styles.order_details_text} text_type_main-medium mt-8`}>
+        идентификатор заказа
+      </p>
       <img
         src={done}
         alt="DONE Image"
