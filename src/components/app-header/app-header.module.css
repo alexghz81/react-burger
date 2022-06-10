@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1c1c21;
+  position: relative;
+}
+
+.header_content_wrapper {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1280px;
+  margin: 0 auto;
+  flex-grow: 1;
+}
+
+.logo {
+  margin: 4px auto 0;
+  position:absolute;
+  left:0;
+  right:0;
+}
