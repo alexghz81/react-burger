@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
@@ -6,6 +6,10 @@ import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
 
 const BurgerIngredients = ({ data }) => {
+  const buns = useRef(null);
+  const sauces = useRef(null);
+  const mains = useRef(null);
+
   const mainIngredientsArray = useMemo(
     () => data.filter((el) => el.type === "main"),
     [data]
@@ -19,26 +23,49 @@ const BurgerIngredients = ({ data }) => {
     [data]
   );
 
+  const handleScroll = (tab) => {
+    switch (tab) {
+      case "bun": {
+        buns.current.scrollIntoView();
+        break;
+      }
+      case "sauce": {
+        sauces.current.scrollIntoView();
+        break;
+      }
+      case "main": {
+        mains.current.scrollIntoView();
+        break;
+      }
+    }
+  };
+
   return (
     <section className={`${styles.burger_ingredients}`}>
       <Title>Соберите бургер</Title>
-      <IngredientTabs active={"bun"} />
+      <IngredientTabs active={"bun"} scroll={handleScroll} />
       <div className={`${styles.burger_ingredients_wrapper} mt-10`}>
-        <IngredientsSection
-          title={"Булки"}
-          type={"bun"}
-          data={bunIngredientsArray}
-        />
-        <IngredientsSection
-          title={"Соусы"}
-          type={"sauce"}
-          data={sauceIngredientsArray}
-        />
-        <IngredientsSection
-          title={"Начинки"}
-          type={"main"}
-          data={mainIngredientsArray}
-        />
+        <div className="buns" ref={buns}>
+          <IngredientsSection
+            title={"Булки"}
+            type={"bun"}
+            data={bunIngredientsArray}
+          />
+        </div>
+        <div className="sauces" ref={sauces}>
+          <IngredientsSection
+            title={"Соусы"}
+            type={"sauce"}
+            data={sauceIngredientsArray}
+          />
+        </div>
+        <div className="mains" ref={mains}>
+          <IngredientsSection
+            title={"Начинки"}
+            type={"main"}
+            data={mainIngredientsArray}
+          />
+        </div>
       </div>
     </section>
   );

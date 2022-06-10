@@ -16,6 +16,7 @@
   flex-wrap: wrap;
   overflow: auto;
   max-height: 66.2963vh;
+  scroll-behavior: smooth;
 }
 
 .burger_ingredients_wrapper::-webkit-scrollbar {
