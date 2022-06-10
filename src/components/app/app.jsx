@@ -5,6 +5,7 @@ import Content from "../content/content";
 import getDataFromApi from "../../utils/get-data-from-api";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
+import OrderDetails from "../order-details/order-details";
 
 function App() {
   const [data, setData] = useState(null);
@@ -31,8 +32,11 @@ function App() {
       // const {type, name: title, ...modalIngredientsData} = ingredientData;
       setModalData({ type: type, title: title, data: ingredientData });
       setModalVisible(true);
-      console.log(modalData);
-      console.log(modalVisible);
+      // console.log(modalData);
+      // console.log(modalVisible);
+    } else {
+      setModalData({ type: "order", title: "", data: "" });
+      setModalVisible(true);
     }
   };
 
@@ -50,9 +54,8 @@ function App() {
             {modalData.type === "ingredient" ? (
               <IngredientDetails {...modalData.data} />
             ) : (
-              "NOT INGREDIENT"
+              <OrderDetails />
             )}
-            {/*// <OrderDetails {...modalData.data} />}*/}
           </Modal>
         )}
       </main>

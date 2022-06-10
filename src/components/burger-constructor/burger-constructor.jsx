@@ -8,7 +8,7 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const BurgerConstructor = ({ data }) => {
+const BurgerConstructor = ({ data, handleModal }) => {
   const bun = data.find((el) => el.type === "bun");
   const ingredients = data.filter((el) => el.type !== "bun");
 
@@ -55,7 +55,7 @@ const BurgerConstructor = ({ data }) => {
           <p className={`text text_type_digits-medium`}>610</p>
           <CurrencyIcon type="primary" />
         </div>
-        <Button type="primary" size="medium">
+        <Button type="primary" size="medium" onClick={handleModal}>
           Оформить заказ
         </Button>
       </div>
