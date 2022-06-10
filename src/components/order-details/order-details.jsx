@@ -8,7 +8,7 @@ export default function OrderDetails() {
       <h3 className={`${styles.order_number} text_type_digits-large`}>
         034536
       </h3>
-      <p className={`${styles.order_details_text} text_type_main-medium mt-8`}>
+      <p className={`${styles.order_details_text} text_type_main-medium pt-8`}>
         идентификатор заказа
       </p>
       <img
@@ -16,10 +16,12 @@ export default function OrderDetails() {
         alt="DONE Image"
         className={`${styles.order_details_done} mt-15 mb-15`}
       />
-      <p className={`${styles.order_details_text} text_type_main-default mb-2`}>
+      <p className={`${styles.order_details_text} text_type_main-default pb-2`}>
         Ваш заказ начали готовить
       </p>
-      <p className="text_type_main-default text_color_inactive mb-15">
+      <p
+        className={`${styles.order_details_text} text text_type_main-default text_color_inactive pb-15`}
+      >
         Дождитесь готовности на орбитальной станции
       </p>
     </div>
