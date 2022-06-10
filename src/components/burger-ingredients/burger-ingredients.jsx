@@ -5,7 +5,7 @@ import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const BurgerIngredients = ({ data }) => {
+const BurgerIngredients = ({ data, handleModal }) => {
   const buns = useRef(null);
   const sauces = useRef(null);
   const mains = useRef(null);
@@ -50,6 +50,7 @@ const BurgerIngredients = ({ data }) => {
             title={"Булки"}
             type={"bun"}
             data={bunIngredientsArray}
+            handleModal={handleModal}
           />
         </div>
         <div className="sauces" ref={sauces}>
@@ -57,6 +58,7 @@ const BurgerIngredients = ({ data }) => {
             title={"Соусы"}
             type={"sauce"}
             data={sauceIngredientsArray}
+            handleModal={handleModal}
           />
         </div>
         <div className="mains" ref={mains}>
@@ -64,6 +66,7 @@ const BurgerIngredients = ({ data }) => {
             title={"Начинки"}
             type={"main"}
             data={mainIngredientsArray}
+            handleModal={handleModal}
           />
         </div>
       </div>
