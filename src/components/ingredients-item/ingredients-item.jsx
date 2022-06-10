@@ -10,7 +10,7 @@ const IngredientsItem = ({ data }) => {
   const { image, name, price, count } = data;
   return (
     <div className={`${styles.ingredients_item}`}>
-      <img src={image} alt="" className={styles.ingredients_image} />
+      <img src={image} alt={name} className={styles.ingredients_image} />
       <div
         className={`${styles.ingredients_cost_wrapper} text text_type_digits-default mt-1 mb-1`}
       >
