@@ -11,7 +11,7 @@ export default function OrderDetails() {
       <p className={`text_type_main-medium mt-8`}>идентификатор заказа</p>
       <img
         src={done}
-        alt="DONE"
+        alt="DONE Image"
         className={`${styles.order_details_done} mt-15 mb-15`}
       />
       <p className={`${styles.order_details_text} text_type_main-default mb-2`}>
