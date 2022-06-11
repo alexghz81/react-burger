@@ -3,6 +3,7 @@ import styles from "./content.module.css";
 import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { ingredientPropType } from "../../utils/prop-types";
+import PropTypes from "prop-types";
 
 const Content = ({ data, handleModal }) => {
   return (
@@ -13,6 +14,9 @@ const Content = ({ data, handleModal }) => {
   );
 };
 
-Content.propTypes = ingredientPropType;
+Content.propTypes = {
+  data: PropTypes.arrayOf(ingredientPropType).isRequired,
+  handleModal: PropTypes.func.isRequired,
+}.isRequired;
 
 export default Content;

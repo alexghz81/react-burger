@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./app.css";
+import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Content from "../content/content";
 import getDataFromApi from "../../utils/get-data-from-api";
@@ -22,18 +22,15 @@ function App() {
       setData(res.data);
     };
 
-    fetchData().catch((err) => console.log("Ошибка :" + err));
+    fetchData();
   }, []);
 
   const handleOpenModal = (id, type) => {
     if (type === "ingredient") {
       const title = "Детали ингредиента";
       const [ingredientData] = data.filter((el) => el._id === id);
-      // const {type, name: title, ...modalIngredientsData} = ingredientData;
       setModalData({ type: type, title: title, data: ingredientData });
       setModalVisible(true);
-      // console.log(modalData);
-      // console.log(modalVisible);
     } else {
       setModalData({ type: "order", title: "", data: "" });
       setModalVisible(true);
@@ -46,7 +43,7 @@ function App() {
 
   return (
     data && (
-      <main className="app">
+      <main className={styles.app}>
         <AppHeader />
         <Content data={data} handleModal={handleOpenModal} />
         {modalVisible && (

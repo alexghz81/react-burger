@@ -8,4 +8,4 @@ export default function ModalOverlay({ handleClose }) {
 
 ModalOverlay.propTypes = {
   handleClose: PropTypes.func.isRequired,
-};
+}.isRequired;

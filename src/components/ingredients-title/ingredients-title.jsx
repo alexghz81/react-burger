@@ -11,6 +11,6 @@ const IngredientsTitle = ({ title }) => {
 
 IngredientsTitle.propTypes = {
   title: PropTypes.string.isRequired,
-};
+}.isRequired;
 
 export default IngredientsTitle;

@@ -7,6 +7,7 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
+import PropTypes from "prop-types";
 
 const BurgerConstructor = ({ data, handleModal }) => {
   const bun = data.find((el) => el.type === "bun");
@@ -63,6 +64,9 @@ const BurgerConstructor = ({ data, handleModal }) => {
   );
 };
 
-BurgerConstructor.propTypes = ingredientPropType;
+BurgerConstructor.propTypes = {
+  data: PropTypes.arrayOf(ingredientPropType).isRequired,
+  handleModal: PropTypes.func.isRequired,
+}.isRequired;
 
 export default BurgerConstructor;

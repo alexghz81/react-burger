@@ -5,6 +5,7 @@ import {
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
+import PropTypes from "prop-types";
 
 const IngredientsItem = ({ data, handleModal }) => {
   const { _id, image, name, price, count } = data;
@@ -28,6 +29,9 @@ const IngredientsItem = ({ data, handleModal }) => {
   );
 };
 
-IngredientsItem.propTypes = ingredientPropType;
+IngredientsItem.propTypes = {
+  data: ingredientPropType,
+  handleModal: PropTypes.func.isRequired,
+}.isRequired;
 
 export default IngredientsItem;

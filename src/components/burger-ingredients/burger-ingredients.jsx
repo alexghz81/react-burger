@@ -4,6 +4,7 @@ import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
+import PropTypes from "prop-types";
 
 const BurgerIngredients = ({ data, handleModal }) => {
   const buns = useRef(null);
@@ -74,6 +75,9 @@ const BurgerIngredients = ({ data, handleModal }) => {
   );
 };
 
-BurgerIngredients.propTypes = ingredientPropType;
+BurgerIngredients.propTypes = {
+  data: PropTypes.arrayOf(ingredientPropType).isRequired,
+  handleModal: PropTypes.func.isRequired,
+}.isRequired;
 
 export default BurgerIngredients;
