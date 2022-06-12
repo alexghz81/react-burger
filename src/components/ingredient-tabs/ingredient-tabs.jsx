@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "../burger-ingredients/burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
 
-const IngredientTabs = ({ active }) => {
+const IngredientTabs = ({ active, scroll }) => {
   const [currentTab, setCurrentTab] = React.useState(active);
+
+  useEffect(() => {
+    scroll(currentTab);
+  }, [currentTab]);
+
   return (
     <div className={styles.tabs}>
       <Tab value={"bun"} active={currentTab === "bun"} onClick={setCurrentTab}>
@@ -26,5 +32,10 @@ const IngredientTabs = ({ active }) => {
     </div>
   );
 };
+
+IngredientTabs.propTypes = {
+  active: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
+  scroll: PropTypes.func.isRequired,
+}.isRequired;
 
 export default IngredientTabs;
