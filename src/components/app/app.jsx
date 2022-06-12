@@ -18,8 +18,12 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await getDataFromApi();
-      setData(res.data);
+      try {
+        const res = await getDataFromApi();
+        setData(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchData();
