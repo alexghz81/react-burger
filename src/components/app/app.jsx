@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Content from "../content/content";
-import getDataFromApi from "../../utils/get-data-from-api";
+import { getDataFromApi } from "../../utils/get-data-from-api";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
@@ -62,16 +62,16 @@ function App() {
               <AppHeader />
               <BurgerDemoDataContext.Provider value={{ demoData, setDemoData }}>
                 <Content handleModal={handleOpenModal} />
+                {modalVisible && (
+                  <Modal title={modalData.title} handleClose={handleCloseModal}>
+                    {modalData.type === "ingredient" ? (
+                      <IngredientDetails {...modalData.data} />
+                    ) : (
+                      <OrderDetails />
+                    )}
+                  </Modal>
+                )}
               </BurgerDemoDataContext.Provider>
-              {modalVisible && (
-                <Modal title={modalData.title} handleClose={handleCloseModal}>
-                  {modalData.type === "ingredient" ? (
-                    <IngredientDetails {...modalData.data} />
-                  ) : (
-                    <OrderDetails />
-                  )}
-                </Modal>
-              )}
             </main>
           </TotalPriceContext.Provider>
         </BurgerConstructorContext.Provider>
