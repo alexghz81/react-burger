@@ -1,12 +1,14 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useContext } from "react";
 import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
+import BurgerIngredientsContext from "../../context/burger-ingredients-context";
 
-const BurgerIngredients = ({ data, handleModal }) => {
+const BurgerIngredients = ({ handleModal }) => {
+  const data = useContext(BurgerIngredientsContext);
   const buns = useRef(null);
   const sauces = useRef(null);
   const mains = useRef(null);
