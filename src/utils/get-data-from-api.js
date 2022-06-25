@@ -9,15 +9,20 @@ export async function getDataFromApi() {
 }
 
 export async function getOrderNumber(data) {
-  console.log(data);
-  const ingredientsArray = data.forEach((el) => {
-    return el._id;
+  const ingredientsArray = [];
+  data.forEach((el) => {
+    ingredientsArray.push(el._id);
   });
   return await fetch(`${API_URL}orders`, {
     method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
     body: JSON.stringify({ ingredients: ingredientsArray }),
   })
     .then((res) => checkResponce(res))
-    .then((res) => console.log(res))
+    .then((res) => {
+      return res.order.number;
+    })
     .catch((err) => console.log(err));
 }

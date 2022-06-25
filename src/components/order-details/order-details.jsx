@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styles from "./order-details.module.css";
 import done from "../../assets/images/done.png";
 import { BurgerDemoDataContext } from "../../context/burger-demo-data-context";
@@ -6,22 +6,25 @@ import { getOrderNumber } from "../../utils/get-data-from-api";
 
 export default function OrderDetails() {
   const { demoData } = useContext(BurgerDemoDataContext);
-  console.log(demoData);
+  const [orderNumber, setOrderNumber] = useState(null);
 
-  useEffect((demoData) => {
-    console.log(demoData);
-    try {
-      getOrderNumber(demoData);
-    } catch (e) {
-      return console.log(e);
-    }
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const res = await getOrderNumber(demoData);
+        await setOrderNumber(res);
+      } catch (err) {
+        return console.log(err);
+      }
+    };
+    fetchOrder();
   }, []);
 
   return (
-    demoData && (
+    orderNumber && (
       <div className={`${styles.order_details} text mt-4`}>
         <h3 className={`${styles.order_number} text_type_digits-large`}>
-          034536
+          {orderNumber}
         </h3>
         <p
           className={`${styles.order_details_text} text_type_main-medium pt-8`}

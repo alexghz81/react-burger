@@ -10,12 +10,9 @@ import BurgerIngredientsContext from "../../context/burger-ingredients-context";
 const Content = ({ handleModal }) => {
   const { demoData, setDemoData } = useContext(BurgerDemoDataContext);
   const data = useContext(BurgerIngredientsContext);
-
   const bunArray = data.filter((el) => el.type === "bun");
   const randomBun = bunArray[Math.floor(Math.random() * bunArray.length)];
-
   const ingredients = data.filter((el) => el.type !== "bun");
-
   const randomNumberOfIngredients = Math.floor(
     Math.random() * ingredients.length
   );
