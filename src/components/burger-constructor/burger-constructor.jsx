@@ -34,14 +34,13 @@ const BurgerConstructor = ({ handleModal }) => {
       type: ADD_INGREDIENT,
       payload: demoData.filter((el) => el.type !== "bun"),
     });
+    const price =
+      ingredientsState.ingredients.reduce((acc, el) => {
+        return acc + el.price;
+      }, 0) +
+      bun.price * 2;
+    setTotalPrice(price);
   }, []);
-
-  const price =
-    ingredientsState.ingredients.reduce((acc, el) => {
-      return acc + el.price;
-    }, 0) +
-    bun.price * 2;
-  setTotalPrice(price);
 
   return (
     ingredientsState && (
