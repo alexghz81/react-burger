@@ -9,15 +9,15 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import BurgerIngredientsContext from "../../context/burger-ingredients-context";
+import BurgerIngredientsContext from "../../services/burger-ingredients-context";
 import ingredientsReducer from "../../services/reducers/ingredients-reducer";
 import {
   ADD_INGREDIENT,
   REMOVE_INGREDIENT,
   RESET_INGREDIENTS,
 } from "../../services/actions/ingredients-actions";
-import { TotalPriceContext } from "../../context/burger-constructor-context";
-import { BurgerDemoDataContext } from "../../context/burger-demo-data-context";
+import { TotalPriceContext } from "../../services/burger-constructor-context";
+import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
 
 const BurgerConstructor = ({ handleModal }) => {
   const ingredientsInitialState = { ingredients: [] };

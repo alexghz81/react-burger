@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./ingredient-details.module.css";
-import PropTypes from "prop-types";
 import { ingredientPropType } from "../../utils/prop-types";
 
 export default function IngredientDetails(data) {

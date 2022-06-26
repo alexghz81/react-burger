@@ -4,8 +4,8 @@ import BurgerIngredients from "../burger-ingredients/burger-ingredients";
 import BurgerConstructor from "../burger-constructor/burger-constructor";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import { BurgerDemoDataContext } from "../../context/burger-demo-data-context";
-import BurgerIngredientsContext from "../../context/burger-ingredients-context";
+import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
+import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
 
 const Content = ({ handleModal }) => {
   const { demoData, setDemoData } = useContext(BurgerDemoDataContext);

@@ -5,7 +5,7 @@ import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import BurgerIngredientsContext from "../../context/burger-ingredients-context";
+import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
 
 const BurgerIngredients = ({ handleModal }) => {
   const data = useContext(BurgerIngredientsContext);
