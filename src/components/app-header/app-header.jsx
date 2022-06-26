@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Logo } from "@ya.praktikum/react-developer-burger-ui-components";
 import styles from "./app-header.module.css";
 import Nav from "../nav/nav";
@@ -39,4 +39,4 @@ const AppHeader = () => {
   );
 };
 
-export default AppHeader;
+export default memo(AppHeader);
