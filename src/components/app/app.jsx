@@ -75,16 +75,16 @@ function App() {
               </TotalPriceContext.Provider>
             </BurgerConstructorContext.Provider>
           </BurgerIngredientsContext.Provider>
-          {modalVisible && (
-            <Modal title={modalData.title} handleClose={handleCloseModal}>
-              {modalData.type === "ingredient" ? (
-                <IngredientDetails {...modalData.data} />
-              ) : (
-                orderNumber && <OrderDetails orderNumber={orderNumber} />
-              )}
-            </Modal>
-          )}
         </BurgerDemoDataContext.Provider>
+        {modalVisible && (
+          <Modal title={modalData.title} handleClose={handleCloseModal}>
+            {modalData.type === "ingredient" ? (
+              <IngredientDetails {...modalData.data} />
+            ) : (
+              orderNumber && <OrderDetails orderNumber={orderNumber} />
+            )}
+          </Modal>
+        )}
       </main>
     )
   );
