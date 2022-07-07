@@ -8,6 +8,13 @@
   list-style: none;
 }
 
+.empty_content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
 .cost {
   display: flex;
   align-items: center;

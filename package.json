@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@redux-devtools/extension": "^3.2.2",
     "@reduxjs/toolkit": "^1.8.2",
     "@ya.praktikum/react-developer-burger-ui-components": "^1.13.1",
+    "axios": "^0.27.2",
     "clsx": "^1.1.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",

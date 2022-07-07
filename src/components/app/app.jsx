@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Content from "../content/content";
@@ -12,8 +13,14 @@ import {
   TotalPriceContext,
 } from "../../services/burger-constructor-context";
 import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
+import { getIngredients } from "../../services/actions/ingredients-actions";
+import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
 
 function App() {
+  const { allIngredients, isLoading, hasError } = useSelector(
+    (state) => state.ingredients
+  );
+  const dispatch = useDispatch();
   const [demoData, setDemoData] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [data, setData] = useState(null);
@@ -27,16 +34,9 @@ function App() {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getDataFromApi();
-        setData(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, []);
+    dispatch(fetchIngredients());
+    console.log("allIngredients > ", allIngredients);
+  }, [dispatch]);
 
   const handleOpenModal = (id, type) => {
     if (type === "ingredient") {
@@ -64,18 +64,10 @@ function App() {
   };
 
   return (
-    data && (
+    allIngredients && (
       <main className={styles.app}>
         <AppHeader />
-        <BurgerDemoDataContext.Provider value={{ demoData, setDemoData }}>
-          <BurgerIngredientsContext.Provider value={data}>
-            <BurgerConstructorContext.Provider value={burgerIngredientsData}>
-              <TotalPriceContext.Provider value={{ totalPrice, setTotalPrice }}>
-                <Content handleModal={handleOpenModal} />
-              </TotalPriceContext.Provider>
-            </BurgerConstructorContext.Provider>
-          </BurgerIngredientsContext.Provider>
-        </BurgerDemoDataContext.Provider>
+        <Content handleModal={handleOpenModal} />
         {modalVisible && (
           <Modal title={modalData.title} handleClose={handleCloseModal}>
             {modalData.type === "ingredient" ? (

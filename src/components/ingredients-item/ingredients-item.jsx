@@ -6,13 +6,22 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
+import { useDrag } from "react-dnd";
 
-const IngredientsItem = ({ data, handleModal }) => {
-  const { _id, image, name, price, count } = data;
+const IngredientsItem = ({ data, handleModal, numberOfIngredient }) => {
+  const { _id, image, name, price, type } = data;
+  const [{ isDrag }, dragRef] = useDrag({
+    type: "ingredient",
+    item: data,
+    collect: (monitor) => ({
+      isDrag: monitor.isDragging(),
+    }),
+  });
   return (
     <div
       className={`${styles.ingredients_item}`}
       onClick={() => handleModal(_id, "ingredient")}
+      ref={dragRef}
     >
       <img src={image} alt={name} className={styles.ingredients_image} />
       <div
@@ -24,7 +33,9 @@ const IngredientsItem = ({ data, handleModal }) => {
       <p className={`${styles.ingredients_title} text text_type_main-default`}>
         {name}
       </p>
-      {count ? <Counter count={count} size={"default"} /> : null}
+      {numberOfIngredient(_id, type) > 0 && (
+        <Counter count={numberOfIngredient(_id, type)} size={"default"} />
+      )}
     </div>
   );
 };
@@ -32,6 +43,7 @@ const IngredientsItem = ({ data, handleModal }) => {
 IngredientsItem.propTypes = {
   data: ingredientPropType,
   handleModal: PropTypes.func.isRequired,
+  numberOfIngredient: PropTypes.func.isRequired,
 }.isRequired;
 
 export default IngredientsItem;
