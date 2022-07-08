@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./burger-constructor.module.css";
 import {
@@ -13,6 +13,7 @@ import { useDrag, useDrop } from "react-dnd";
 import {
   addIngredient,
   removeIngredient,
+  reorderIngredients,
 } from "../../services/reducers/constructor-slice";
 import ConstructorItem from "../constructor-item/constructor-item";
 
@@ -42,6 +43,22 @@ const BurgerConstructor = ({ handleModal }) => {
     dispatch(removeIngredient(id));
   };
 
+  const findIngredient = useCallback(
+    (id) => {
+      const ingredient = ingredients.filter((el) => el.id === id)[0];
+      return { index: ingredients.indexOf(ingredient) };
+    },
+    [ingredients]
+  );
+
+  const reorderIngredient = useCallback(
+    (id, toIndex) => {
+      const { index } = findIngredient(id);
+      dispatch(reorderIngredients({ index, toIndex }));
+    },
+    [findIngredient, ingredients, dispatch]
+  );
+
   return (
     <section className={`${styles.burger_constructor} pt-25`} ref={drop}>
       {hasBun ? (
@@ -59,12 +76,15 @@ const BurgerConstructor = ({ handleModal }) => {
       ) : null}
       {ingredients.length > 0 ? (
         <ul className={`${styles.burger_constructor_items} pl-4 pr-2`}>
-          {ingredient.map((el) => {
+          {ingredient.map((el, index) => {
             return (
               <ConstructorItem
                 element={el}
                 handleDelete={handleDelete}
                 key={el.id}
+                index={index}
+                findIngredient={findIngredient}
+                reorderIngredient={reorderIngredient}
               />
             );
           })}

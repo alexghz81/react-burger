@@ -5,7 +5,7 @@ import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { InView, useInView } from "react-intersection-observer";
+import { useInView } from "react-intersection-observer";
 import { setActiveTab } from "../../services/reducers/tab-slice";
 
 const BurgerIngredients = ({ handleModal }) => {

@@ -3,4 +3,5 @@
   flex-grow: 1;
   align-items: center;
   gap: 8px;
+  cursor: grab;
 }

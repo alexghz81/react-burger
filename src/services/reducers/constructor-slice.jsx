@@ -21,12 +21,24 @@ const constructorSlice = createSlice({
       const index = state.ingredients.indexOf((el) => el.id === action.payload);
       state.ingredients.splice(index, 1);
     },
+    reorderIngredients(state, action) {
+      const { index, toIndex } = action.payload;
+      state.ingredients.splice(
+        index,
+        0,
+        state.ingredients.splice(toIndex, 1)[0]
+      );
+    },
     resetConstructor(state) {
       state = initialState;
     },
   },
 });
 
-export const { addIngredient, removeIngredient, resetConstructor } =
-  constructorSlice.actions;
+export const {
+  addIngredient,
+  removeIngredient,
+  resetConstructor,
+  reorderIngredients,
+} = constructorSlice.actions;
 export default constructorSlice.reducer;

@@ -14,6 +14,7 @@ function App() {
     (state) => state.ingredients
   );
   const dispatch = useDispatch();
+  const { visible, ingredient, order } = useSelector((state) => state.modal);
   const [data, setData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [orderNumber, setOrderNumber] = useState(null);

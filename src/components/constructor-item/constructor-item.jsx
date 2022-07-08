@@ -1,25 +1,51 @@
-import React from "react";
+import React, { useRef } from "react";
 import styles from "./constructor-item.module.css";
 import {
   ConstructorElement,
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDrag } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 
-const ConstructorItem = (props) => {
-  const { element, handleDelete } = props;
+const ConstructorItem = ({
+  element,
+  handleDelete,
+  index,
+  findIngredient,
+  reorderIngredient,
+}) => {
+  const ref = useRef();
+  const id = element.id;
+  const ingredientIndex = findIngredient(id).index;
+  const [{ isDrag }, drag] = useDrag(
+    {
+      type: "dragIngredient",
+      item: { id, ingredientIndex },
+      collect: (monitor) => ({
+        isDrag: monitor.isDragging(),
+      }),
+    },
+    [id, ingredientIndex]
+  );
 
-  const [{ isDrag }, dragRef] = useDrag({
-    type: "ingredient",
-    item: element,
-    collect: (monitor) => ({
-      isDrag: monitor.isDragging(),
-    }),
-  });
+  const [{ handlerId }, drop] = useDrop(
+    {
+      accept: "dragIngredient",
+      canDrop: () => false,
+      hover: ({ id: dragId }) => {
+        if (dragId !== id) {
+          const { index: overIndex } = findIngredient(id);
+          reorderIngredient(dragId, overIndex);
+        }
+      },
+    },
+    [findIngredient, reorderIngredient]
+  );
+
+  drag(drop(ref));
 
   return (
     <>
-      <li className={styles.ingredients_item} ref={dragRef}>
+      <li className={styles.ingredients_item} ref={ref}>
         <DragIcon type={"primary"} />
         <ConstructorElement
           text={element.name}
