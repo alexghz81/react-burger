@@ -3,17 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Content from "../content/content";
-import { getDataFromApi, getOrderNumber } from "../../utils/get-data-from-api";
+import { getOrderNumber } from "../../utils/get-data-from-api";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
-import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
-import {
-  BurgerConstructorContext,
-  TotalPriceContext,
-} from "../../services/burger-constructor-context";
-import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
-import { getIngredients } from "../../services/actions/ingredients-actions";
 import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
 
 function App() {
@@ -21,10 +14,7 @@ function App() {
     (state) => state.ingredients
   );
   const dispatch = useDispatch();
-  const [demoData, setDemoData] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [data, setData] = useState(null);
-  const [burgerIngredientsData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [orderNumber, setOrderNumber] = useState(null);
   const [modalData, setModalData] = useState({

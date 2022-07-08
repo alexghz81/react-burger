@@ -1,31 +1,38 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../burger-ingredients/burger-ingredients.module.css";
 import { Tab } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
+import { useDispatch, useSelector } from "react-redux";
+import { setActiveTab } from "../../services/reducers/tab-slice";
 
-const IngredientTabs = ({ active, scroll }) => {
-  const [currentTab, setCurrentTab] = React.useState(active);
+const IngredientTabs = ({ scroll }) => {
+  const dispatch = useDispatch();
+  const { activeTab } = useSelector((state) => state.tab);
 
   useEffect(() => {
-    scroll(currentTab);
-  }, [currentTab]);
+    scroll(activeTab);
+  }, [activeTab]);
 
   return (
     <div className={styles.tabs}>
-      <Tab value={"bun"} active={currentTab === "bun"} onClick={setCurrentTab}>
+      <Tab
+        value={"buns"}
+        active={activeTab === "buns"}
+        onClick={() => dispatch(setActiveTab("buns"))}
+      >
         Булки
       </Tab>
       <Tab
-        value={"sauce"}
-        active={currentTab === "sauce"}
-        onClick={setCurrentTab}
+        value={"sauces"}
+        active={activeTab === "sauces"}
+        onClick={() => dispatch(setActiveTab("sauces"))}
       >
         Соусы
       </Tab>
       <Tab
-        value={"main"}
-        active={currentTab === "main"}
-        onClick={setCurrentTab}
+        value={"mains"}
+        active={activeTab === "mains"}
+        onClick={() => dispatch(setActiveTab("mains"))}
       >
         Начинки
       </Tab>
@@ -34,7 +41,6 @@ const IngredientTabs = ({ active, scroll }) => {
 };
 
 IngredientTabs.propTypes = {
-  active: PropTypes.oneOf(["bun", "sauce", "main"]).isRequired,
   scroll: PropTypes.func.isRequired,
 }.isRequired;
 
