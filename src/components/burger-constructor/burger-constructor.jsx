@@ -9,11 +9,12 @@ import {
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 import {
   addIngredient,
   removeIngredient,
 } from "../../services/reducers/constructor-slice";
+import ConstructorItem from "../constructor-item/constructor-item";
 
 const BurgerConstructor = ({ handleModal }) => {
   const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
@@ -27,6 +28,7 @@ const BurgerConstructor = ({ handleModal }) => {
       dispatch(addIngredient(ingredient));
     },
   });
+
   const ingredient = ingredients.filter((el) => el.type !== "bun");
   const hasBun = useMemo(() => Object.keys(bun).length !== 0, [bun]);
   const totalPrice = useMemo(() => {
@@ -59,15 +61,11 @@ const BurgerConstructor = ({ handleModal }) => {
         <ul className={`${styles.burger_constructor_items} pl-4 pr-2`}>
           {ingredient.map((el) => {
             return (
-              <li className={styles.ingredients_item} key={el.id}>
-                <DragIcon type={"primary"} />
-                <ConstructorElement
-                  text={el.name}
-                  thumbnail={el.image}
-                  price={el.price}
-                  handleClose={() => handleDelete(el.id)}
-                />
-              </li>
+              <ConstructorItem
+                element={el}
+                handleDelete={handleDelete}
+                key={el.id}
+              />
             );
           })}
         </ul>

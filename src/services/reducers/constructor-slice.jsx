@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
 
+const initialState = {
+  ingredients: [],
+  bun: {},
+};
+
 const constructorSlice = createSlice({
   name: "constructor",
-  initialState: {
-    ingredients: [],
-    bun: {},
-  },
+  initialState,
   reducers: {
     addIngredient(state, action) {
       if (action.payload.type === "bun") {
@@ -19,7 +21,9 @@ const constructorSlice = createSlice({
       const index = state.ingredients.indexOf((el) => el.id === action.payload);
       state.ingredients.splice(index, 1);
     },
-    resetConstructor(state, action) {},
+    resetConstructor(state) {
+      state = initialState;
+    },
   },
 });
 
