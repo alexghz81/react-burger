@@ -1,8 +1,10 @@
 import React from "react";
 import styles from "./ingredient-details.module.css";
 import { ingredientPropType } from "../../utils/prop-types";
+import { useSelector } from "react-redux";
 
-export default function IngredientDetails(data) {
+export default function IngredientDetails() {
+  const { data } = useSelector((state) => state.modal);
   const { image_large, name, calories, proteins, fat, carbohydrates } = data;
   return (
     <div className={`${styles.ingredient_details}`}>
