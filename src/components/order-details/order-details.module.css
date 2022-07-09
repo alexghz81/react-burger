@@ -17,3 +17,9 @@
 .order_details_text {
   margin: 0;
 }
+
+.error_message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

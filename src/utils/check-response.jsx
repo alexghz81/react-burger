@@ -1,3 +1,3 @@
-export default function checkResponse(response, error) {
-  return response.ok ? response.json() : throw new Error(error);
+export default function checkResponse(response) {
+  return response.ok ? response.json() : Promise.reject();
 }

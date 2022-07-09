@@ -6,9 +6,8 @@ export const fetchIngredients = createAsyncThunk(
   "ingredients/fetchIngredients",
   async function (_, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}ingredients`).then(checkResponse);
-
-      return await response;
+      const response = await fetch(`${API_URL}ingredients`);
+      return checkResponse(response);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -21,6 +20,7 @@ const ingredientsSlice = createSlice({
     allIngredients: [],
     isLoading: false,
     hasError: false,
+    errorMessage: "",
   },
   extraReducers: {
     [fetchIngredients.pending]: (state) => {
@@ -34,6 +34,7 @@ const ingredientsSlice = createSlice({
     [fetchIngredients.rejected]: (state) => {
       state.isLoading = false;
       state.hasError = true;
+      state.errorMessage = "Ошибка получения ингредиентов с сервера!";
     },
   },
 });

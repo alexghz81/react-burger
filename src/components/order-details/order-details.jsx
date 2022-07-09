@@ -4,8 +4,16 @@ import done from "../../assets/images/done.png";
 import { useSelector } from "react-redux";
 
 export default function OrderDetails() {
-  const { number } = useSelector((state) => state.order);
-  return (
+  const { number, hasError, errorMessage } = useSelector(
+    (state) => state.order
+  );
+  return hasError ? (
+    <div
+      className={`${styles.error_message} text_type_main-default text_color_inactive`}
+    >
+      {errorMessage}
+    </div>
+  ) : (
     number && (
       <div className={`${styles.order_details} text mt-4`}>
         <h3 className={`${styles.order_number} text_type_digits-large`}>

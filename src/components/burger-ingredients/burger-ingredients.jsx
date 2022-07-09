@@ -9,7 +9,9 @@ import { useInView } from "react-intersection-observer";
 import { setActiveTab } from "../../services/reducers/tab-slice";
 
 const BurgerIngredients = ({ handleModal }) => {
-  const { allIngredients } = useSelector((state) => state.ingredients);
+  const { allIngredients, hasError, errorMessage } = useSelector(
+    (state) => state.ingredients
+  );
   const { ingredients: constructorIngredients, bun } = useSelector(
     (state) => state.burgerConstructor
   );
@@ -63,7 +65,13 @@ const BurgerIngredients = ({ handleModal }) => {
     return result;
   };
 
-  return (
+  return hasError ? (
+    <div
+      className={`${styles.error_message} text_type_main-default text_color_inactive`}
+    >
+      {errorMessage}
+    </div>
+  ) : (
     <section className={`${styles.burger_ingredients}`}>
       <Title>Соберите бургер</Title>
       <IngredientTabs scroll={handleScroll} />
