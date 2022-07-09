@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
+import checkResponse from "../../utils/check-response";
 
 export const fetchOrder = createAsyncThunk(
   "modal/fetchOrder",
@@ -12,10 +13,7 @@ export const fetchOrder = createAsyncThunk(
         },
         body: JSON.stringify({ ingredients: ingredients }),
       });
-      if (!response.ok) {
-        throw new Error("Ошибка получения номера заказа!");
-      }
-      return await response.json();
+      return await checkResponse(response, "Ошибка получения номера заказа!");
     } catch (error) {
       return rejectWithValue(error.message);
     }

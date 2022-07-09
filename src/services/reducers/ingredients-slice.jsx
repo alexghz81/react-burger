@@ -1,15 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
+import checkResponse from "../../utils/check-response";
 
 export const fetchIngredients = createAsyncThunk(
   "ingredients/fetchIngredients",
   async function (_, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}ingredients`);
-      if (!response.ok) {
-        throw new Error("Ошибка загрузки ингредиентов с сервера!");
-      }
-      return await response.json();
+      const response = await fetch(`${API_URL}ingredients`).then(checkResponse);
+
+      return await response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
