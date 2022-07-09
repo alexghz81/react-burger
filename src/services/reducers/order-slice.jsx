@@ -6,7 +6,7 @@ export const fetchOrder = createAsyncThunk(
   "modal/fetchOrder",
   async function (ingredients, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}orderss`, {
+      const response = await fetch(`${API_URL}orders`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
