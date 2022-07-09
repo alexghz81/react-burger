@@ -1,15 +1,13 @@
-import React, { useCallback, useEffect, useMemo } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useCallback, useMemo } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrop } from "react-dnd";
 import {
   addIngredient,
   removeIngredient,
@@ -20,7 +18,7 @@ import ConstructorItem from "../constructor-item/constructor-item";
 const BurgerConstructor = ({ handleModal }) => {
   const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
   const dispatch = useDispatch();
-  const [{ isHover }, drop] = useDrop({
+  const [, drop] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -100,7 +98,7 @@ const BurgerConstructor = ({ handleModal }) => {
       )}
       {hasBun ? (
         <ul
-          className={`${styles.burger_constructor_item} ${styles.position_top}`}
+          className={`${styles.burger_constructor_item} ${styles.position_bottom}`}
         >
           <ConstructorElement
             text={`${bun.name} (низ)`}

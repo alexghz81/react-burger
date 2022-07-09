@@ -24,6 +24,7 @@ const IngredientsList = ({ data, handleModal, numberOfIngredient }) => {
 IngredientsList.propTypes = {
   data: PropTypes.arrayOf(ingredientPropType).isRequired,
   handleModal: PropTypes.func.isRequired,
+  numberOfIngredients: PropTypes.func.isRequired,
 }.isRequired;
 
 export default IngredientsList;

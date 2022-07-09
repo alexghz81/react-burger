@@ -23,11 +23,6 @@ const ingredientsSlice = createSlice({
     isLoading: false,
     hasError: false,
   },
-  reducers: {
-    addIngredient(state, action) {
-      state.ingredients.push(action.payload);
-    },
-  },
   extraReducers: {
     [fetchIngredients.pending]: (state) => {
       state.isLoading = true;
@@ -44,5 +39,4 @@ const ingredientsSlice = createSlice({
   },
 });
 
-export const { addIngredient } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

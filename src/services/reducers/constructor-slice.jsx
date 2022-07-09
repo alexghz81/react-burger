@@ -30,7 +30,8 @@ const constructorSlice = createSlice({
       );
     },
     resetConstructor(state) {
-      state = initialState;
+      state.ingredients = [];
+      state.bun = {};
     },
   },
 });

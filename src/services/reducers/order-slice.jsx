@@ -1,19 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
 
-export const orderRequest = createAsyncThunk(
-  "order/orderRequest",
-  async function (ingredientsArray, { rejectWithValue }) {
+export const fetchOrder = createAsyncThunk(
+  "modal/fetchOrder",
+  async function (ingredients, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}order`, {
+      const response = await fetch(`${API_URL}orders`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(ingredientsArray),
+        body: JSON.stringify({ ingredients: ingredients }),
       });
       if (!response.ok) {
-        throw new Error("Ошибка размещения заказа!");
+        throw new Error("Ошибка получения номера заказа!");
       }
       return await response.json();
     } catch (error) {
@@ -30,23 +30,25 @@ const orderSlice = createSlice({
     hasError: false,
   },
   reducers: {
-    createOrder(state, action) {},
+    resetOrder(state) {
+      state.number = null;
+    },
   },
   extraReducers: {
-    [orderRequest.pending]: (state) => {
+    [fetchOrder.pending]: (state) => {
       state.pending = true;
       state.hasError = false;
     },
-    [orderRequest.fulfilled]: (state, action) => {
+    [fetchOrder.fulfilled]: (state, action) => {
       state.pending = false;
-      state.number = action.payload;
+      state.number = action.payload.order.number;
     },
-    [orderRequest.rejected]: (state) => {
+    [fetchOrder.rejected]: (state) => {
       state.pending = false;
       state.hasError = true;
     },
   },
 });
 
-export const { createOrder } = orderSlice.actions;
+export const { resetOrder } = orderSlice.actions;
 export default orderSlice.reducer;

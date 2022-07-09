@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
@@ -14,7 +14,6 @@ const BurgerIngredients = ({ handleModal }) => {
     (state) => state.burgerConstructor
   );
   const container = useRef();
-  const { activeTab } = useSelector((state) => state.tab);
   const dispatch = useDispatch();
   const [buns, inViewBuns] = useInView({
     threshold: 0.4,
@@ -29,13 +28,10 @@ const BurgerIngredients = ({ handleModal }) => {
   useEffect(() => {
     if (inViewBuns) {
       dispatch(setActiveTab("buns"));
-      console.log(activeTab);
     } else if (inViewSauces) {
       dispatch(setActiveTab("sauces"));
-      console.log(activeTab);
     } else if (inViewMains) {
       dispatch(setActiveTab("mains"));
-      console.log(activeTab);
     }
   }, [inViewBuns, inViewSauces, inViewMains]);
 

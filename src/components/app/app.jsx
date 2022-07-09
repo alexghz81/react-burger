@@ -7,19 +7,24 @@ import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
 import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
+import { hideModal, showModal } from "../../services/reducers/modal-slice";
+import { fetchOrder, resetOrder } from "../../services/reducers/order-slice";
+import Spinner from "../spinner/spinner";
+import { resetConstructor } from "../../services/reducers/constructor-slice";
 import {
-  fetchOrder,
-  hideModal,
-  showIngredientModal,
-} from "../../services/reducers/modal-slice";
+  getIngredient,
+  resetIngredient,
+} from "../../services/reducers/ingredient-slice";
 
 function App() {
-  const { allIngredients, isLoading, hasError } = useSelector(
+  const { allIngredients, isLoading } = useSelector(
     (state) => state.ingredients
   );
   const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
   const dispatch = useDispatch();
-  const { visible, type, data } = useSelector((state) => state.modal);
+  const { visible, type } = useSelector((state) => state.modal);
+  const { pending } = useSelector((state) => state.order);
+  const { ingredient } = useSelector((state) => state.ingredient);
 
   useEffect(() => {
     dispatch(fetchIngredients());
@@ -29,9 +34,8 @@ function App() {
     if (type === "ingredient") {
       const title = "Детали ингредиента";
       const [ingredientData] = allIngredients.filter((el) => el._id === id);
-      dispatch(
-        showIngredientModal({ type: type, title: title, data: ingredientData })
-      );
+      dispatch(getIngredient(ingredientData));
+      dispatch(showModal({ type: type, title: title }));
     } else {
       const orderIngredients = ingredients.map((el) => el._id);
       if (bun._id) {
@@ -39,25 +43,33 @@ function App() {
         orderIngredients.push(bun._id);
       }
       dispatch(fetchOrder(orderIngredients));
+      dispatch(showModal({ type: "order", title: "" }));
+      dispatch(resetConstructor());
     }
   };
 
   const handleCloseModal = () => {
     dispatch(hideModal());
+    dispatch(resetIngredient());
+    dispatch(resetOrder());
   };
 
   return (
-    allIngredients && (
-      <main className={styles.app}>
-        <AppHeader />
-        <Content handleModal={handleOpenModal} />
-        {visible && data && (
-          <Modal handleClose={handleCloseModal}>
-            {type === "ingredient" ? <IngredientDetails /> : <OrderDetails />}
-          </Modal>
-        )}
-      </main>
-    )
+    <main className={styles.app}>
+      <AppHeader />
+      {isLoading ? <Spinner /> : <Content handleModal={handleOpenModal} />}
+      {visible && (
+        <Modal handleClose={handleCloseModal}>
+          {type === "ingredient" ? (
+            ingredient && <IngredientDetails />
+          ) : pending ? (
+            <Spinner />
+          ) : (
+            <OrderDetails />
+          )}
+        </Modal>
+      )}
+    </main>
   );
 }
 

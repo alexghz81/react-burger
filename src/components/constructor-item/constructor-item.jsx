@@ -5,18 +5,19 @@ import {
   DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useDrag, useDrop } from "react-dnd";
+import PropTypes from "prop-types";
+import { ingredientPropType } from "../../utils/prop-types";
 
 const ConstructorItem = ({
   element,
   handleDelete,
-  index,
   findIngredient,
   reorderIngredient,
 }) => {
   const ref = useRef();
   const id = element.id;
   const ingredientIndex = findIngredient(id).index;
-  const [{ isDrag }, drag] = useDrag(
+  const [, drag] = useDrag(
     {
       type: "dragIngredient",
       item: { id, ingredientIndex },
@@ -27,7 +28,7 @@ const ConstructorItem = ({
     [id, ingredientIndex]
   );
 
-  const [{ handlerId }, drop] = useDrop(
+  const [, drop] = useDrop(
     {
       accept: "dragIngredient",
       canDrop: () => false,
@@ -57,5 +58,12 @@ const ConstructorItem = ({
     </>
   );
 };
+
+ConstructorItem.propTypes = {
+  element: ingredientPropType,
+  handleDelete: PropTypes.func.isRequired,
+  findIngredient: PropTypes.func.isRequired,
+  reorderIngredient: PropTypes.func.isRequired,
+}.isRequired;
 
 export default ConstructorItem;

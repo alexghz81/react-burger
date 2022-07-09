@@ -26,6 +26,7 @@ IngredientsSection.propTypes = {
   title: PropTypes.string.isRequired,
   data: ingredientPropType,
   handleModal: PropTypes.func.isRequired,
+  numberOfIngredients: PropTypes.func.isRequired,
 }.isRequired;
 
 export default IngredientsSection;

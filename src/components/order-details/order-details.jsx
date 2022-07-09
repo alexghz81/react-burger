@@ -1,16 +1,15 @@
 import React from "react";
 import styles from "./order-details.module.css";
 import done from "../../assets/images/done.png";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 export default function OrderDetails() {
-  const { data } = useSelector((state) => state.modal);
+  const { number } = useSelector((state) => state.order);
   return (
-    data && (
+    number && (
       <div className={`${styles.order_details} text mt-4`}>
         <h3 className={`${styles.order_number} text_type_digits-large`}>
-          {data}
+          {number}
         </h3>
         <p
           className={`${styles.order_details_text} text_type_main-medium pt-8`}
@@ -36,7 +35,3 @@ export default function OrderDetails() {
     )
   );
 }
-
-OrderDetails.propTypes = {
-  orderNumber: PropTypes.number.isRequired,
-}.isRequired;

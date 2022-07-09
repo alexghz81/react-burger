@@ -4,6 +4,7 @@ import constructorReducer from "./reducers/constructor-slice";
 import orderReducer from "./reducers/order-slice";
 import tabReducer from "./reducers/tab-slice";
 import modalReducer from "./reducers/modal-slice";
+import ingredientReducer from "./reducers/ingredient-slice";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     order: orderReducer,
     tab: tabReducer,
     modal: modalReducer,
+    ingredient: ingredientReducer,
   },
 });

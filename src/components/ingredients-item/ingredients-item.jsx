@@ -10,7 +10,7 @@ import { useDrag } from "react-dnd";
 
 const IngredientsItem = ({ data, handleModal, numberOfIngredient }) => {
   const { _id, image, name, price, type } = data;
-  const [{ isDrag }, dragRef] = useDrag({
+  const [, dragRef] = useDrag({
     type: "ingredient",
     item: data,
     collect: (monitor) => ({
