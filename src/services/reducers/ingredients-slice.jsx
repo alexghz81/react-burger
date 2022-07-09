@@ -26,6 +26,7 @@ const ingredientsSlice = createSlice({
     [fetchIngredients.pending]: (state) => {
       state.isLoading = true;
       state.hasError = false;
+      state.errorMessage = null;
     },
     [fetchIngredients.fulfilled]: (state, action) => {
       state.isLoading = false;
