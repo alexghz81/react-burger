@@ -1,0 +1,7 @@
+.ingredients_item {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  gap: 8px;
+  cursor: grab;
+}

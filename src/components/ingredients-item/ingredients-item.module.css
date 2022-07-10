@@ -5,7 +5,7 @@
   position: relative;
   width: 272px;
   height: 208px;
-
+  cursor: grab;
 }
 
 .ingredients_image {

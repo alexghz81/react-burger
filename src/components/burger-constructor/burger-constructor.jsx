@@ -1,50 +1,65 @@
-import React, { useContext, useEffect, useReducer } from "react";
-import { v4 as uuidv4 } from "uuid";
+import React, { useCallback, useMemo } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
   ConstructorElement,
   CurrencyIcon,
-  DragIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
-import BurgerIngredientsContext from "../../services/burger-ingredients-context";
-import ingredientsReducer from "../../services/reducers/ingredients-reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useDrop } from "react-dnd";
 import {
-  ADD_INGREDIENT,
-  REMOVE_INGREDIENT,
-  RESET_INGREDIENTS,
-} from "../../services/actions/ingredients-actions";
-import { TotalPriceContext } from "../../services/burger-constructor-context";
-import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
+  addIngredient,
+  removeIngredient,
+  reorderIngredients,
+} from "../../services/reducers/constructor-slice";
+import ConstructorItem from "../constructor-item/constructor-item";
 
 const BurgerConstructor = ({ handleModal }) => {
-  const ingredientsInitialState = { ingredients: [] };
-  const { totalPrice, setTotalPrice } = useContext(TotalPriceContext);
-  const { demoData, setDemoData } = useContext(BurgerDemoDataContext);
-  const [ingredientsState, ingredientsDispatch] = useReducer(
-    ingredientsReducer,
-    ingredientsInitialState
-  );
-  const [bun] = demoData.filter((el) => el.type === "bun");
+  const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
+  const dispatch = useDispatch();
+  const [, drop] = useDrop({
+    accept: "ingredient",
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+    drop(ingredient) {
+      dispatch(addIngredient(ingredient));
+    },
+  });
 
-  useEffect(() => {
-    ingredientsDispatch({
-      type: ADD_INGREDIENT,
-      payload: demoData.filter((el) => el.type !== "bun"),
-    });
-    const price =
-      ingredientsState.ingredients.reduce((acc, el) => {
-        return acc + el.price;
-      }, 0) +
-      bun.price * 2;
-    setTotalPrice(price);
-  }, []);
+  const ingredient = ingredients.filter((el) => el.type !== "bun");
+  const hasBun = useMemo(() => Object.keys(bun).length !== 0, [bun]);
+  const totalPrice = useMemo(() => {
+    return (
+      (hasBun ? bun.price * 2 : 0) +
+      ingredients.reduce((sum, el) => sum + el.price, 0)
+    );
+  }, [ingredients, bun]);
+
+  const handleDelete = (id) => {
+    dispatch(removeIngredient(id));
+  };
+
+  const findIngredient = useCallback(
+    (id) => {
+      const ingredient = ingredients.filter((el) => el.id === id)[0];
+      return { index: ingredients.indexOf(ingredient) };
+    },
+    [ingredients]
+  );
+
+  const reorderIngredient = useCallback(
+    (id, toIndex) => {
+      const { index } = findIngredient(id);
+      dispatch(reorderIngredients({ index, toIndex }));
+    },
+    [findIngredient, ingredients, dispatch]
+  );
 
   return (
-    ingredientsState && (
-      <section className={`${styles.burger_constructor} pt-25`}>
+    <section className={`${styles.burger_constructor} pt-25`} ref={drop}>
+      {hasBun ? (
         <ul
           className={`${styles.burger_constructor_item} ${styles.position_top}`}
         >
@@ -56,22 +71,34 @@ const BurgerConstructor = ({ handleModal }) => {
             price={bun.price}
           />
         </ul>
+      ) : null}
+      {ingredients.length > 0 ? (
         <ul className={`${styles.burger_constructor_items} pl-4 pr-2`}>
-          {ingredientsState.ingredients.map((el) => {
+          {ingredient.map((el, index) => {
             return (
-              <li className={styles.ingredients_item} key={uuidv4()}>
-                <DragIcon type={"primary"} />
-                <ConstructorElement
-                  text={el.name}
-                  thumbnail={el.image}
-                  price={el.price}
-                />
-              </li>
+              <ConstructorItem
+                element={el}
+                handleDelete={handleDelete}
+                key={el.id}
+                index={index}
+                findIngredient={findIngredient}
+                reorderIngredient={reorderIngredient}
+              />
             );
           })}
         </ul>
+      ) : (
+        !hasBun && (
+          <div className={styles.empty_content}>
+            <span className="text_type_main-default text_color_inactive">
+              Перетащите сюда ингредиент, чтобы собрать заказ
+            </span>
+          </div>
+        )
+      )}
+      {hasBun ? (
         <ul
-          className={`${styles.burger_constructor_item} ${styles.position_top}`}
+          className={`${styles.burger_constructor_item} ${styles.position_bottom}`}
         >
           <ConstructorElement
             text={`${bun.name} (низ)`}
@@ -81,6 +108,8 @@ const BurgerConstructor = ({ handleModal }) => {
             price={bun.price}
           />
         </ul>
+      ) : null}
+      {totalPrice > 0 ? (
         <div className={`${styles.burger_constructor_cost} mt-11 mr-4`}>
           <div className={`${styles.cost} mr-10`}>
             <p className={`text text_type_digits-medium`}>{totalPrice}</p>
@@ -90,8 +119,8 @@ const BurgerConstructor = ({ handleModal }) => {
             Оформить заказ
           </Button>
         </div>
-      </section>
-    )
+      ) : null}
+    </section>
   );
 };
 

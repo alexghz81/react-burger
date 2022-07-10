@@ -1,92 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Content from "../content/content";
-import { getDataFromApi, getOrderNumber } from "../../utils/get-data-from-api";
 import Modal from "../modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
 import OrderDetails from "../order-details/order-details";
-import { BurgerIngredientsContext } from "../../services/burger-ingredients-context";
+import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
+import { hideModal, showModal } from "../../services/reducers/modal-slice";
+import { fetchOrder, resetOrder } from "../../services/reducers/order-slice";
+import Spinner from "../spinner/spinner";
+import { resetConstructor } from "../../services/reducers/constructor-slice";
 import {
-  BurgerConstructorContext,
-  TotalPriceContext,
-} from "../../services/burger-constructor-context";
-import { BurgerDemoDataContext } from "../../services/burger-demo-data-context";
+  getIngredient,
+  resetIngredient,
+} from "../../services/reducers/ingredient-slice";
 
 function App() {
-  const [demoData, setDemoData] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [data, setData] = useState(null);
-  const [burgerIngredientsData] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [orderNumber, setOrderNumber] = useState(null);
-  const [modalData, setModalData] = useState({
-    type: null,
-    title: null,
-    data: null,
-  });
+  const { allIngredients, isLoading } = useSelector(
+    (state) => state.ingredients
+  );
+  const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
+  const dispatch = useDispatch();
+  const { visible, type } = useSelector((state) => state.modal);
+  const { pending } = useSelector((state) => state.order);
+  const { ingredient } = useSelector((state) => state.ingredient);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await getDataFromApi();
-        setData(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchData();
-  }, []);
+    dispatch(fetchIngredients());
+  }, [dispatch]);
 
   const handleOpenModal = (id, type) => {
     if (type === "ingredient") {
       const title = "Детали ингредиента";
-      const [ingredientData] = data.filter((el) => el._id === id);
-      setModalData({ type: type, title: title, data: ingredientData });
-      setModalVisible(true);
+      const [ingredientData] = allIngredients.filter((el) => el._id === id);
+      dispatch(getIngredient(ingredientData));
+      dispatch(showModal({ type: type, title: title }));
     } else {
-      const fetchOrder = async () => {
-        try {
-          const res = await getOrderNumber(demoData);
-          await setOrderNumber(res);
-          await setModalData({ type: "order", title: "", data: "" });
-          await setModalVisible(true);
-        } catch (err) {
-          return console.log(err);
-        }
-      };
-      fetchOrder();
+      const orderIngredients = ingredients.map((el) => el._id);
+      if (bun._id) {
+        orderIngredients.push(bun._id);
+        orderIngredients.push(bun._id);
+      }
+      dispatch(fetchOrder(orderIngredients));
+      dispatch(showModal({ type: "order", title: "" }));
+      dispatch(resetConstructor());
     }
   };
 
   const handleCloseModal = () => {
-    setModalVisible(false);
+    dispatch(hideModal());
+    dispatch(resetIngredient());
+    dispatch(resetOrder());
   };
 
   return (
-    data && (
-      <main className={styles.app}>
-        <AppHeader />
-        <BurgerDemoDataContext.Provider value={{ demoData, setDemoData }}>
-          <BurgerIngredientsContext.Provider value={data}>
-            <BurgerConstructorContext.Provider value={burgerIngredientsData}>
-              <TotalPriceContext.Provider value={{ totalPrice, setTotalPrice }}>
-                <Content handleModal={handleOpenModal} />
-              </TotalPriceContext.Provider>
-            </BurgerConstructorContext.Provider>
-          </BurgerIngredientsContext.Provider>
-        </BurgerDemoDataContext.Provider>
-        {modalVisible && (
-          <Modal title={modalData.title} handleClose={handleCloseModal}>
-            {modalData.type === "ingredient" ? (
-              <IngredientDetails {...modalData.data} />
-            ) : (
-              orderNumber && <OrderDetails orderNumber={orderNumber} />
-            )}
-          </Modal>
-        )}
-      </main>
-    )
+    <main className={styles.app}>
+      <AppHeader />
+      {isLoading ? <Spinner /> : <Content handleModal={handleOpenModal} />}
+      {visible && (
+        <Modal handleClose={handleCloseModal}>
+          {type === "ingredient" ? (
+            ingredient && <IngredientDetails />
+          ) : pending ? (
+            <Spinner />
+          ) : (
+            <OrderDetails />
+          )}
+        </Modal>
+      )}
+    </main>
   );
 }
 

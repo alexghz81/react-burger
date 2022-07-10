@@ -1,0 +1,44 @@
+.center {
+  text-align: center;
+}
+
+.spinner {
+  display: inline-block;
+  position: relative;
+  width: 180px;
+  height: 180px;
+}
+
+.spinner div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  margin-top: 150px;
+  border: 5px solid #fff;
+  border-radius: 50%;
+  animation: spinner_ring 1.2s cubic-bezier(.5, 0, .5, 1) infinite;
+  border-color: #7f23ad transparent transparent #3434e0;
+}
+
+.first {
+  animation-delay: -.35s;
+}
+
+.second {
+  animation-delay: -.5s;
+}
+
+.third {
+  animation-delay: -.20s;
+}
+
+@keyframes spinner_ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

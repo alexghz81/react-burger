@@ -31,3 +31,9 @@
   background-color: #8585AD;
   height: 492px;
 }
+
+.error_message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
