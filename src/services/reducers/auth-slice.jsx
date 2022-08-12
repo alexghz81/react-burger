@@ -60,6 +60,25 @@ export const fetchLogin = createAsyncThunk(
   }
 );
 
+export const fetchForgotPassword = createAsyncThunk(
+  "auth/fetchForgotPassword",
+  async function (form, { rejectWithValue }) {
+    try {
+      const response = await fetch(`${API_URL}password-reset`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      console.log("Forgot password Response :", response);
+      return checkResponse(response);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -96,6 +115,17 @@ const authSlice = createSlice({
       state.request = false;
       state.hasError = true;
       state.errorMessage = "Ошибка регистрации!";
+    },
+    [fetchForgotPassword.pending]: (state) => {
+      state.request = true;
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchForgotPassword.fulfilled]: (state, action) => {
+      state.request = false;
+      console.log(action.payload.message);
+      state.hasError = false;
+      state.errorMessage = null;
     },
     [fetchLogin.pending]: (state) => {
       state.request = true;

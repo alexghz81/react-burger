@@ -5,7 +5,10 @@ import {
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
 import { Link } from "react-router-dom";
-import { fetchRegister, formSetValue } from "../services/reducers/auth-slice";
+import {
+  fetchForgotPassword,
+  formSetValue,
+} from "../services/reducers/auth-slice";
 import { useDispatch, useSelector } from "react-redux";
 
 const ForgotPassword = () => {
@@ -18,7 +21,7 @@ const ForgotPassword = () => {
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    // dispatch(fetchRegister({ name, email, password }));
+    dispatch(fetchForgotPassword({ email }));
   };
 
   return (
