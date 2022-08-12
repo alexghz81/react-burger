@@ -9,6 +9,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   --text-primary-light: #f2f2f3;
   --text-dark-grey: #8585ad;
+  --header-background: #1c1c21;
   position: relative;
 }
 

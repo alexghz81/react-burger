@@ -3,6 +3,8 @@
   justify-content: center;
   align-items: center;
   text-decoration: none;
+  z-index: 1;
+  color: var(--text-dark-grey);
 }
 
 .active {
@@ -11,4 +13,10 @@
 
 .inactive {
   color: var(--text-dark-grey);
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
