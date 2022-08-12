@@ -16,7 +16,8 @@ import {
   resetIngredient,
 } from "../../services/reducers/ingredient-slice";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { Constructor, Login, OrdersFeed, Profile } from "../../pages";
+import { Constructor, Login, OrdersFeed, Profile, Register } from "../../pages";
+import ForgotPassword from "../../pages/forgot-password";
 
 function App() {
   const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
@@ -37,6 +38,12 @@ function App() {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/forgot-password">
+            <ForgotPassword />
           </Route>
         </Switch>
       </Router>
