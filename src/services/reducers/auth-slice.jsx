@@ -7,6 +7,7 @@ const initialState = {
     email: "",
     password: "",
     name: "",
+    token: "",
   },
   request: false,
   hasError: false,
@@ -79,6 +80,26 @@ export const fetchForgotPassword = createAsyncThunk(
   }
 );
 
+export const fetchResetPassword = createAsyncThunk(
+  "auth/fetchResetPassword",
+  async function (form, { rejectWithValue }) {
+    try {
+      console.log("Reset Password form", form);
+      const response = await fetch(`${API_URL}password-reset/reset`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+      console.log("Reset password Response :", response);
+      return checkResponse(response);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -122,6 +143,17 @@ const authSlice = createSlice({
       state.errorMessage = null;
     },
     [fetchForgotPassword.fulfilled]: (state, action) => {
+      state.request = false;
+      console.log(action.payload.message);
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchResetPassword.pending]: (state) => {
+      state.request = true;
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchResetPassword.fulfilled]: (state, action) => {
       state.request = false;
       console.log(action.payload.message);
       state.hasError = false;
