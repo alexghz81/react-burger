@@ -4,7 +4,13 @@ import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Modal from "../hocs/modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  useHistory,
+  useLocation,
+} from "react-router-dom";
 import {
   Constructor,
   Login,
@@ -21,6 +27,8 @@ import { getCookie } from "../../utils/utils";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
   const background = location.state?.background;
 
   useEffect(() => {
@@ -37,7 +45,7 @@ function App() {
     <main className={styles.app}>
       <Router>
         <AppHeader />
-        <Switch>
+        <Switch location={background || location}>
           <Route path="/" exact>
             <Constructor />
           </Route>
@@ -59,16 +67,20 @@ function App() {
           <ProtectedRoute path="/reset-password" onlyGuest={true} exact>
             <ResetPassword />
           </ProtectedRoute>
+          <Route path="/ingredients/:id" children={<IngredientDetails />} />
           <Route path="*">
             <Error404 />
           </Route>
         </Switch>
         {background && (
-          <Route path="/ingredients/:id" exact>
-            <Modal onClose={onClose}>
-              <IngredientDetails />
-            </Modal>
-          </Route>
+          <Route
+            path="/ingredients/:id"
+            children={
+              <Modal onClose={onClose}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
         )}
       </Router>
     </main>

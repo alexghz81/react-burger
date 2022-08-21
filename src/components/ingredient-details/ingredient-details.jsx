@@ -1,11 +1,14 @@
 import React from "react";
 import styles from "./ingredient-details.module.css";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 export default function IngredientDetails() {
+  const { id } = useParams();
   const { ingredient } = useSelector((state) => state.ingredient);
   const { image_large, name, calories, proteins, fat, carbohydrates } =
     ingredient;
+  console.log(id);
   return (
     ingredient && (
       <div className={`${styles.ingredient_details}`}>
