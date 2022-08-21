@@ -1,16 +1,10 @@
 import React, { useCallback, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Modal from "../hocs/modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  useHistory,
-  useLocation,
-} from "react-router-dom";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import {
   Constructor,
   Login,
@@ -24,14 +18,21 @@ import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
 import { fetchUser } from "../../services/reducers/auth-slice";
 import { getCookie } from "../../utils/utils";
+import { fetchIngredients } from "../../services/reducers/ingredients-slice";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
   const background = location.state?.background;
+  const { allIngredients } = useSelector((state) => state.ingredients);
 
+  // useEffect(() => {
+  //   dispatch(fetchIngredients());
+  // }, [dispatch]);
+  //
   useEffect(() => {
+    dispatch(fetchIngredients());
     if (getCookie("accessToken")) {
       dispatch(fetchUser());
     }
@@ -39,11 +40,13 @@ function App() {
 
   const onClose = useCallback(() => {
     history.goBack();
-  }, [history]);
+  });
+
+  console.log(allIngredients);
 
   return (
-    <main className={styles.app}>
-      <Router>
+    allIngredients && (
+      <main className={styles.app}>
         <AppHeader />
         <Switch location={background || location}>
           <Route path="/" exact>
@@ -67,7 +70,9 @@ function App() {
           <ProtectedRoute path="/reset-password" onlyGuest={true} exact>
             <ResetPassword />
           </ProtectedRoute>
-          <Route path="/ingredients/:id" children={<IngredientDetails />} />
+          <Route path="/ingredients/:id" exact>
+            <IngredientDetails />
+          </Route>
           <Route path="*">
             <Error404 />
           </Route>
@@ -76,14 +81,14 @@ function App() {
           <Route
             path="/ingredients/:id"
             children={
-              <Modal onClose={onClose}>
+              <Modal handleClose={onClose}>
                 <IngredientDetails />
               </Modal>
             }
           />
         )}
-      </Router>
-    </main>
+      </main>
+    )
   );
 }
 

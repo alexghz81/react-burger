@@ -22,9 +22,9 @@ function Constructor() {
   const { allIngredients, isLoading } = useSelector(
     (state) => state.ingredients
   );
-  useEffect(() => {
-    dispatch(fetchIngredients());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchIngredients());
+  // }, [dispatch]);
 
   const handleOpenModal = (id, type) => {
     const title = "Детали ингредиента";
