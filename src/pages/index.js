@@ -1,6 +1,6 @@
 import Constructor from "./constructor";
 import OrdersFeed from "./orders-feed";
-import Profile from "./profile";
+import Profile from "./profile/profile";
 import Login from "./login"
 import Register from "./register"
 import ForgotPassword from "./forgot-password";

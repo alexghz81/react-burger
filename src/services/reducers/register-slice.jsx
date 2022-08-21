@@ -1,12 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
 import checkResponse from "../../utils/check-response";
+import { setCookie } from "../../utils/utils";
 
-export const fetchLogin = createAsyncThunk(
-  "auth/fetchLogin",
+const initialState = {
+  request: false,
+  hasError: false,
+  errorMessage: null,
+  success: false,
+};
+
+export const fetchRegister = createAsyncThunk(
+  "register/fetchRegister",
   async function (form, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}auth/login`, {
+      const response = await fetch(`${API_URL}auth/register`, {
         method: "POST",
         mode: "cors",
         cache: "no-cache",
@@ -16,7 +24,6 @@ export const fetchLogin = createAsyncThunk(
         },
         body: JSON.stringify(form),
       });
-      console.log("Login Response :", response);
       return checkResponse(response);
     } catch (error) {
       return rejectWithValue(error.message);
@@ -24,32 +31,28 @@ export const fetchLogin = createAsyncThunk(
   }
 );
 
-const loginSlice = createSlice({
-  name: "auth",
-  initialState: {
-    email: "",
-    password: "",
-    name: "",
-    request: false,
-    hasError: false,
-    errorMessage: "",
-  },
+const registerSlice = createSlice({
+  name: "register",
+  initialState,
   extraReducers: {
-    [fetchLogin.pending]: (state) => {
+    [fetchRegister.pending]: (state) => {
       state.request = true;
       state.hasError = false;
       state.errorMessage = null;
     },
-    [fetchLogin.fulfilled]: (state, action) => {
+    [fetchRegister.fulfilled]: (state, action) => {
       state.request = false;
-      state.auth = action.payload.data;
+      setCookie("accessToken", action.payload.accessToken.split("Bearer ")[1]);
+      setCookie("refreshToken", action.payload.refreshToken);
+      state.success = true;
     },
-    [fetchLogin.rejected]: (state) => {
+    [fetchRegister.rejected]: (state, action) => {
       state.request = false;
       state.hasError = true;
-      state.errorMessage = "Ошибка авторизации!";
+      state.errorMessage = action.payload;
+      console.log(state.errorMessage);
     },
   },
 });
 
-export default loginSlice.reducer;
+export default registerSlice.reducer;

@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   Input,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import styles from "./form.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  formSetValue,
-  fetchResetPassword,
-} from "../services/reducers/auth-slice";
+import { formSetValue } from "../services/reducers/form-slice";
+import { fetchResetPassword } from "../services/reducers/reset-password-slice";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
-  const { password } = useSelector((state) => state.auth.form);
-  const { token } = useSelector((state) => state.auth.form);
+  const { password, token } = useSelector((state) => state.form);
+  const { success } = useSelector((state) => state.resetPassword);
+  const { isForgotPassword } = useSelector((state) => state.forgotPassword);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (success) {
+      history.push("/profile");
+    }
+  }, [success, history]);
 
   const onSubmit = (evt) => {
     evt.preventDefault();
@@ -26,7 +32,7 @@ const ResetPassword = () => {
     dispatch(formSetValue({ input: evt.target.name, value: evt.target.value }));
   };
 
-  return (
+  return isForgotPassword ? (
     <div className={styles.wrapper}>
       <h1 className="text_type_main-medium mt-10 pt-10 mb-6">
         Восстановление пароля
@@ -58,6 +64,8 @@ const ResetPassword = () => {
         </Link>
       </p>
     </div>
+  ) : (
+    <Redirect to="/forgot-password" />
   );
 };
 

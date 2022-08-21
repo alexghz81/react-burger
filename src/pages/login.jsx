@@ -1,22 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   EmailInput,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import styles from "./form.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { formSetValue } from "../services/reducers/auth-slice";
+import { formSetValue } from "../services/reducers/form-slice";
+import { fetchLogin, setAuthPassword } from "../services/reducers/auth-slice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const { email, password } = useSelector((state) => state.auth.form);
+  const { email, password } = useSelector((state) => state.form);
+  const { isAuthChecked } = useSelector((state) => state.auth);
+  const history = useHistory();
 
   const onSubmit = (evt) => {
     evt.preventDefault();
-    // dispatch();
+    dispatch(setAuthPassword(password));
+    dispatch(fetchLogin({ email, password }));
+    // dispatch(setAuthPassword({ password }));
   };
+
+  useEffect(() => {
+    if (isAuthChecked) {
+      history.push("/profile");
+    }
+  }, [isAuthChecked, history]);
 
   const onChange = (evt) => {
     dispatch(formSetValue({ input: evt.target.name, value: evt.target.value }));

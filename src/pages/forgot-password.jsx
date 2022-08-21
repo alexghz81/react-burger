@@ -1,19 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./form.module.css";
 import {
   Button,
   Input,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
-import {
-  fetchForgotPassword,
-  formSetValue,
-} from "../services/reducers/auth-slice";
+import { Link, useHistory } from "react-router-dom";
+import { formSetValue } from "../services/reducers/form-slice";
 import { useDispatch, useSelector } from "react-redux";
+import { fetchForgotPassword } from "../services/reducers/forgot-password-slice";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.auth.form);
+  const { email } = useSelector((state) => state.form);
+  const { success } = useSelector((state) => state.forgotPassword);
+  const history = useHistory();
 
   const onChange = (evt) => {
     dispatch(formSetValue({ input: evt.target.name, value: evt.target.value }));
@@ -23,6 +23,12 @@ const ForgotPassword = () => {
     evt.preventDefault();
     dispatch(fetchForgotPassword({ email }));
   };
+
+  useEffect(() => {
+    if (success) {
+      location.state = history.push("/reset-password");
+    }
+  }, [success, history]);
 
   return (
     <div className={styles.wrapper}>

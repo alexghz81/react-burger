@@ -1,20 +1,9 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
-import Content from "../content/content";
 import Modal from "../hocs/modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import OrderDetails from "../order-details/order-details";
-import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
-import { hideModal, showModal } from "../../services/reducers/modal-slice";
-import { fetchOrder, resetOrder } from "../../services/reducers/order-slice";
-import Spinner from "../spinner/spinner";
-import { resetConstructor } from "../../services/reducers/constructor-slice";
-import {
-  getIngredient,
-  resetIngredient,
-} from "../../services/reducers/ingredient-slice";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import {
   Constructor,
@@ -25,9 +14,24 @@ import {
   ForgotPassword,
   ResetPassword,
 } from "../../pages";
+import { Error404 } from "../../pages/error-page";
+import ProtectedRoute from "../protected-route";
+import { fetchUser } from "../../services/reducers/auth-slice";
+import { getCookie } from "../../utils/utils";
 
 function App() {
-  const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
+  const dispatch = useDispatch();
+  const background = location.state?.background;
+
+  useEffect(() => {
+    if (getCookie("accessToken")) {
+      dispatch(fetchUser());
+    }
+  }, [dispatch]);
+
+  const onClose = useCallback(() => {
+    history.goBack();
+  }, [history]);
 
   return (
     <main className={styles.app}>
@@ -37,25 +41,35 @@ function App() {
           <Route path="/" exact>
             <Constructor />
           </Route>
-          <Route path="/orders-feed">
+          <Route path="/orders-feed" exact>
             <OrdersFeed />
           </Route>
-          <Route path="/profile">
+          <ProtectedRoute path="/profile" exact>
             <Profile />
-          </Route>
-          <Route path="/login">
+          </ProtectedRoute>
+          <ProtectedRoute path="/login" onlyGuest={true} exact>
             <Login />
-          </Route>
-          <Route path="/register">
+          </ProtectedRoute>
+          <ProtectedRoute path="/register" onlyGuest={true} exact>
             <Register />
-          </Route>
-          <Route path="/forgot-password">
+          </ProtectedRoute>
+          <ProtectedRoute path="/forgot-password" onlyGuest={true} exact>
             <ForgotPassword />
-          </Route>
-          <Route path="/reset-password">
+          </ProtectedRoute>
+          <ProtectedRoute path="/reset-password" onlyGuest={true} exact>
             <ResetPassword />
+          </ProtectedRoute>
+          <Route path="*">
+            <Error404 />
           </Route>
         </Switch>
+        {background && (
+          <Route path="/ingredients/:id" exact>
+            <Modal onClose={onClose}>
+              <IngredientDetails />
+            </Modal>
+          </Route>
+        )}
       </Router>
     </main>
   );

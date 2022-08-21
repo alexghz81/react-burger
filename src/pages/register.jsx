@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Button,
   EmailInput,
@@ -6,14 +6,23 @@ import {
   Logo,
   PasswordInput,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { Link } from "react-router-dom";
-import { fetchRegister, formSetValue } from "../services/reducers/auth-slice";
+import { Link, useHistory } from "react-router-dom";
+import { formSetValue } from "../services/reducers/form-slice";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./form.module.css";
+import { fetchRegister } from "../services/reducers/register-slice";
 
 const Register = () => {
   const dispatch = useDispatch();
-  const { name, email, password } = useSelector((state) => state.auth.form);
+  const { name, email, password } = useSelector((state) => state.form);
+  const { success } = useSelector((state) => state.register);
+  const history = useHistory();
+
+  useEffect(() => {
+    if (success) {
+      history.push("/profile");
+    }
+  }, [success, history]);
 
   const onSubmit = (evt) => {
     evt.preventDefault();

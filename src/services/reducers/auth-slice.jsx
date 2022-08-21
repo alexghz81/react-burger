@@ -1,43 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
 import checkResponse from "../../utils/check-response";
+import {
+  deleteCookie,
+  fetchWithRefresh,
+  getCookie,
+  setCookie,
+} from "../../utils/utils";
 
 const initialState = {
-  form: {
-    email: "",
-    password: "",
-    name: "",
-    token: "",
-  },
+  email: "",
+  name: "",
+  password: "",
   request: false,
   hasError: false,
-  errorMessage: "",
-  user: {},
-  token: "",
+  errorMessage: null,
+  isAuthChecked: false,
 };
-
-export const fetchRegister = createAsyncThunk(
-  "auth/fetchRegister",
-  async function (form, { rejectWithValue }) {
-    try {
-      console.log("FORM : ", form);
-      const response = await fetch(`${API_URL}auth/register`, {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-      console.log("Register Response :", response);
-      return checkResponse(response);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
 
 export const fetchLogin = createAsyncThunk(
   "auth/fetchLogin",
@@ -53,7 +32,6 @@ export const fetchLogin = createAsyncThunk(
         },
         body: JSON.stringify(form),
       });
-      console.log("Register Response :", response);
       return checkResponse(response);
     } catch (error) {
       return rejectWithValue(error.message);
@@ -61,38 +39,55 @@ export const fetchLogin = createAsyncThunk(
   }
 );
 
-export const fetchForgotPassword = createAsyncThunk(
-  "auth/fetchForgotPassword",
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async function (_, { rejectWithValue }) {
+    try {
+      const response = await fetchWithRefresh(`${API_URL}auth/user`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${getCookie("accessToken")}`,
+        },
+      });
+      return response;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const fetchUpdateUser = createAsyncThunk(
+  "auth/fetchUpdateUser",
   async function (form, { rejectWithValue }) {
     try {
-      const response = await fetch(`${API_URL}password-reset`, {
-        method: "POST",
+      const response = await fetchWithRefresh(`${API_URL}auth/user`, {
+        method: "PATCH",
         headers: {
+          Authorization: `Bearer ${getCookie("accessToken")}`,
           "Content-type": "application/json",
         },
         body: JSON.stringify(form),
       });
-      console.log("Forgot password Response :", response);
-      return checkResponse(response);
+      return response;
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const fetchResetPassword = createAsyncThunk(
-  "auth/fetchResetPassword",
-  async function (form, { rejectWithValue }) {
+export const fetchLogout = createAsyncThunk(
+  "auth/fetchLogout",
+  async function (refreshToken, { rejectWithValue }) {
     try {
-      console.log("Reset Password form", form);
-      const response = await fetch(`${API_URL}password-reset/reset`, {
+      const response = await fetch(`${API_URL}auth/logout`, {
         method: "POST",
         headers: {
           "Content-type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ token: refreshToken }),
       });
-      console.log("Reset password Response :", response);
+      deleteCookie("accessToken");
+      deleteCookie("refreshToken");
       return checkResponse(response);
     } catch (error) {
       return rejectWithValue(error.message);
@@ -104,67 +99,80 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    formSetValue(state, action) {
-      console.log("ACTION : ", action.payload);
-      state.form[action.payload.input] = action.payload.value;
+    setAuthPassword(state, action) {
+      state.password = action.payload;
     },
   },
   extraReducers: {
-    [fetchRegister.pending]: (state) => {
-      state.request = true;
-      state.hasError = false;
-      state.errorMessage = null;
-    },
-    [fetchRegister.fulfilled]: (state, action) => {
-      state.request = false;
-      console.log("fetchRegister action", action);
-      state.user = action.payload.user;
-      state.token = action.payload.accessToken.split("Bearer ")[1];
-      state.form = {
-        email: "",
-        password: "",
-        name: "",
-      };
-      // if (state.token) {
-      //   setCookie("token", state.token);
-      // }
-      console.log("Token :", state.token);
-      // state.email = action.payload.user.email;
-      // state.name = action.payload.user.name;
-    },
-    [fetchRegister.rejected]: (state) => {
-      state.request = false;
-      state.hasError = true;
-      state.errorMessage = "Ошибка регистрации!";
-    },
-    [fetchForgotPassword.pending]: (state) => {
-      state.request = true;
-      state.hasError = false;
-      state.errorMessage = null;
-    },
-    [fetchForgotPassword.fulfilled]: (state, action) => {
-      state.request = false;
-      console.log(action.payload.message);
-      state.hasError = false;
-      state.errorMessage = null;
-    },
-    [fetchResetPassword.pending]: (state) => {
-      state.request = true;
-      state.hasError = false;
-      state.errorMessage = null;
-    },
-    [fetchResetPassword.fulfilled]: (state, action) => {
-      state.request = false;
-      console.log(action.payload.message);
-      state.hasError = false;
-      state.errorMessage = null;
-    },
     [fetchLogin.pending]: (state) => {
       state.request = true;
       state.hasError = false;
       state.errorMessage = null;
     },
+    [fetchLogin.fulfilled]: (state, action) => {
+      state.request = false;
+      state.email = action.payload.user.email;
+      state.name = action.payload.user.name;
+      state.isAuthChecked = true;
+      setCookie("accessToken", action.payload.accessToken.split("Bearer ")[1]);
+      setCookie("refreshToken", action.payload.refreshToken);
+    },
+    [fetchLogin.rejected]: (state) => {
+      state.request = false;
+      state.hasError = true;
+      state.errorMessage = "Ошибка авторизации!";
+    },
+    [fetchUser.pending]: (state) => {
+      state.request = true;
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchUser.fulfilled]: (state, action) => {
+      state.request = false;
+      state.isAuthChecked = action.payload.success;
+      state.name = action.payload.user.name;
+      state.email = action.payload.user.email;
+    },
+    [fetchUser.rejected]: (state, action) => {
+      state.request = false;
+      state.hasError = true;
+      state.errorMessage = action.payload;
+    },
+    [fetchLogout.pending]: (state) => {
+      state.request = true;
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchLogout.fulfilled]: (state) => {
+      state.request = false;
+      state.name = "";
+      state.email = "";
+      state.isAuthChecked = false;
+      deleteCookie("accessToken");
+      deleteCookie("refreshToken");
+    },
+    [fetchLogout.rejected]: (state, action) => {
+      state.request = false;
+      state.hasError = true;
+      state.errorMessage = action.payload.message;
+    },
+    [fetchUpdateUser.pending]: (state) => {
+      state.request = true;
+      state.hasError = false;
+      state.errorMessage = null;
+    },
+    [fetchUpdateUser.fulfilled]: (state, action) => {
+      state.request = false;
+      state.name = action.payload.user.name;
+      state.email = action.payload.user.email;
+    },
+    [fetchUpdateUser.rejected]: (state, action) => {
+      state.request = false;
+      state.hasError = true;
+      state.errorMessage = action.payload;
+    },
   },
 });
-export const { formSetValue } = authSlice.actions;
+
+export const { setAuthPassword } = authSlice.actions;
 export default authSlice.reducer;
