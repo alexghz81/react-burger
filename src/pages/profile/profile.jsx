@@ -14,9 +14,6 @@ import { fetchUpdateUser } from "../../services/reducers/auth-slice";
 
 const Profile = () => {
   const [buttonsVisible, setButtonsVisible] = useState(false);
-  const [name, setName] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const form = useSelector((state) => state.form);
@@ -29,10 +26,6 @@ const Profile = () => {
 
   useEffect(() => {
     setInitialForm();
-    // setName(auth.name);
-    // setEmail(auth.email);
-    // setPassword(form.password);
-    // dispatch(formSetValue({ name: name }));
   }, []);
 
   const onSubmit = (evt) => {
