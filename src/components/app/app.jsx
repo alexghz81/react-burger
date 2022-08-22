@@ -14,6 +14,7 @@ import {
   ForgotPassword,
   ResetPassword,
   Logout,
+  Feed,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
@@ -73,6 +74,9 @@ function App() {
           </ProtectedRoute>
           <Route path="/ingredients/:id" exact>
             <IngredientDetails />
+          </Route>
+          <Route path="/feed">
+            <Feed />
           </Route>
           <Route path="*">
             <Error404 />
