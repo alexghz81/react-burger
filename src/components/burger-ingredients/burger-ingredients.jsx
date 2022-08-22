@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 import { setActiveTab } from "../../services/reducers/tab-slice";
 
-const BurgerIngredients = ({ handleModal }) => {
+const BurgerIngredients = () => {
   const { allIngredients, hasError, errorMessage } = useSelector(
     (state) => state.ingredients
   );
@@ -84,7 +84,6 @@ const BurgerIngredients = ({ handleModal }) => {
             title={"Булки"}
             type={"bun"}
             data={bunIngredientsArray}
-            handleModal={handleModal}
             numberOfIngredient={numberOfIngredient}
           />
         </div>
@@ -93,7 +92,6 @@ const BurgerIngredients = ({ handleModal }) => {
             title={"Соусы"}
             type={"sauce"}
             data={sauceIngredientsArray}
-            handleModal={handleModal}
             numberOfIngredient={numberOfIngredient}
           />
         </div>
@@ -102,7 +100,6 @@ const BurgerIngredients = ({ handleModal }) => {
             title={"Начинки"}
             type={"main"}
             data={mainIngredientsArray}
-            handleModal={handleModal}
             numberOfIngredient={numberOfIngredient}
           />
         </div>
@@ -110,9 +107,5 @@ const BurgerIngredients = ({ handleModal }) => {
     </section>
   );
 };
-
-BurgerIngredients.propTypes = {
-  handleModal: PropTypes.func.isRequired,
-}.isRequired;
 
 export default BurgerIngredients;

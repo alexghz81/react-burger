@@ -5,7 +5,7 @@ import NavItem from "../nav-item/nav-item";
 
 const Nav = ({ items }) => {
   return (
-    <nav className={styles.nav}>
+    <nav className={`${styles.nav} `}>
       {items.map((item, i) => (
         <NavItem {...item} key={i} />
       ))}

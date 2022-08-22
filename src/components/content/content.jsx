@@ -14,7 +14,7 @@ const Content = ({ handleModal }) => {
     allIngredients && (
       <section className={styles.content}>
         <DndProvider backend={HTML5Backend}>
-          <BurgerIngredients handleModal={handleModal} />
+          <BurgerIngredients />
           <BurgerConstructor handleModal={handleModal} />
         </DndProvider>
       </section>

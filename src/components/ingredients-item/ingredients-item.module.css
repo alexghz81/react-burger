@@ -6,6 +6,8 @@
   width: 272px;
   height: 208px;
   cursor: grab;
+  text-decoration: none;
+  color: #ffffff;
 }
 
 .ingredients_image {

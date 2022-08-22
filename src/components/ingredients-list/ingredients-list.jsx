@@ -12,7 +12,6 @@ const IngredientsList = ({ data, handleModal, numberOfIngredient }) => {
           <IngredientsItem
             key={item._id}
             data={item}
-            handleModal={handleModal}
             numberOfIngredient={numberOfIngredient}
           />
         ))}
@@ -23,7 +22,6 @@ const IngredientsList = ({ data, handleModal, numberOfIngredient }) => {
 
 IngredientsList.propTypes = {
   data: PropTypes.arrayOf(ingredientPropType).isRequired,
-  handleModal: PropTypes.func.isRequired,
   numberOfIngredients: PropTypes.func.isRequired,
 }.isRequired;
 

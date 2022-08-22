@@ -12,12 +12,19 @@ import {
   addIngredient,
   removeIngredient,
   reorderIngredients,
+  resetConstructor,
 } from "../../services/reducers/constructor-slice";
 import ConstructorItem from "../constructor-item/constructor-item";
+import { getIngredient } from "../../services/reducers/ingredient-slice";
+import { showModal } from "../../services/reducers/modal-slice";
+import { fetchOrder } from "../../services/reducers/order-slice";
+import { useHistory } from "react-router-dom";
 
-const BurgerConstructor = ({ handleModal }) => {
+const BurgerConstructor = () => {
   const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
   const dispatch = useDispatch();
+  const { isAuthChecked } = useSelector((state) => state.auth);
+  const history = useHistory();
   const [, drop] = useDrop({
     accept: "ingredient",
     collect: (monitor) => ({
@@ -56,6 +63,21 @@ const BurgerConstructor = ({ handleModal }) => {
     },
     [findIngredient, ingredients, dispatch]
   );
+
+  const handleModal = () => {
+    if (isAuthChecked) {
+      const orderIngredients = ingredients.map((el) => el._id);
+      if (bun._id) {
+        orderIngredients.push(bun._id);
+        orderIngredients.push(bun._id);
+      }
+      dispatch(fetchOrder(orderIngredients));
+      dispatch(showModal({ type: "order", title: "", visible: true }));
+      dispatch(resetConstructor());
+    } else {
+      history.push("/login");
+    }
+  };
 
   return (
     <section className={`${styles.burger_constructor} pt-25`} ref={drop}>
@@ -124,8 +146,8 @@ const BurgerConstructor = ({ handleModal }) => {
   );
 };
 
-BurgerConstructor.propTypes = {
-  handleModal: PropTypes.func.isRequired,
-}.isRequired;
+// BurgerConstructor.propTypes = {
+//   handleModal: PropTypes.func.isRequired,
+// }.isRequired;
 
 export default React.memo(BurgerConstructor);

@@ -1,75 +1,95 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
-import Content from "../content/content";
-import Modal from "../modal/modal";
+import Modal from "../hocs/modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import OrderDetails from "../order-details/order-details";
-import { fetchIngredients } from "../../services/reducers/ingredients-slice.jsx";
-import { hideModal, showModal } from "../../services/reducers/modal-slice";
-import { fetchOrder, resetOrder } from "../../services/reducers/order-slice";
-import Spinner from "../spinner/spinner";
-import { resetConstructor } from "../../services/reducers/constructor-slice";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import {
-  getIngredient,
-  resetIngredient,
-} from "../../services/reducers/ingredient-slice";
+  Constructor,
+  Login,
+  OrdersFeed,
+  Profile,
+  Register,
+  ForgotPassword,
+  ResetPassword,
+  Logout,
+} from "../../pages";
+import { Error404 } from "../../pages/error-page";
+import ProtectedRoute from "../protected-route";
+import { fetchUser } from "../../services/reducers/auth-slice";
+import { getCookie } from "../../utils/utils";
+import { fetchIngredients } from "../../services/reducers/ingredients-slice";
 
 function App() {
-  const { allIngredients, isLoading } = useSelector(
-    (state) => state.ingredients
-  );
-  const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
   const dispatch = useDispatch();
-  const { visible, type } = useSelector((state) => state.modal);
-  const { pending } = useSelector((state) => state.order);
-  const { ingredient } = useSelector((state) => state.ingredient);
+  const location = useLocation();
+  const history = useHistory();
+  const background = location.state?.background;
+  const { allIngredients } = useSelector((state) => state.ingredients);
 
   useEffect(() => {
     dispatch(fetchIngredients());
+  }, []);
+
+  useEffect(() => {
+    if (getCookie("accessToken")) {
+      dispatch(fetchUser());
+    }
   }, [dispatch]);
 
-  const handleOpenModal = (id, type) => {
-    if (type === "ingredient") {
-      const title = "Детали ингредиента";
-      const [ingredientData] = allIngredients.filter((el) => el._id === id);
-      dispatch(getIngredient(ingredientData));
-      dispatch(showModal({ type: type, title: title }));
-    } else {
-      const orderIngredients = ingredients.map((el) => el._id);
-      if (bun._id) {
-        orderIngredients.push(bun._id);
-        orderIngredients.push(bun._id);
-      }
-      dispatch(fetchOrder(orderIngredients));
-      dispatch(showModal({ type: "order", title: "" }));
-      dispatch(resetConstructor());
-    }
-  };
-
-  const handleCloseModal = () => {
-    dispatch(hideModal());
-    dispatch(resetIngredient());
-    dispatch(resetOrder());
-  };
+  const onClose = useCallback(() => {
+    history.goBack();
+  }, [history]);
 
   return (
-    <main className={styles.app}>
-      <AppHeader />
-      {isLoading ? <Spinner /> : <Content handleModal={handleOpenModal} />}
-      {visible && (
-        <Modal handleClose={handleCloseModal}>
-          {type === "ingredient" ? (
-            ingredient && <IngredientDetails />
-          ) : pending ? (
-            <Spinner />
-          ) : (
-            <OrderDetails />
-          )}
-        </Modal>
-      )}
-    </main>
+    allIngredients && (
+      <main className={styles.app}>
+        <AppHeader />
+        <Switch location={background || location}>
+          <Route path="/" exact>
+            <Constructor />
+          </Route>
+          <Route path="/orders-feed" exact>
+            <OrdersFeed />
+          </Route>
+          <ProtectedRoute path="/profile" exact>
+            <Profile />
+          </ProtectedRoute>
+          <ProtectedRoute path="/login" onlyGuest={true} exact>
+            <Login />
+          </ProtectedRoute>
+          <Route path="/logout">
+            <Logout />
+          </Route>
+          <ProtectedRoute path="/register" onlyGuest={true} exact>
+            <Register />
+          </ProtectedRoute>
+          <ProtectedRoute path="/forgot-password" onlyGuest={true} exact>
+            <ForgotPassword />
+          </ProtectedRoute>
+          <ProtectedRoute path="/reset-password" onlyGuest={true} exact>
+            <ResetPassword />
+          </ProtectedRoute>
+          <Route path="/ingredients/:id" exact>
+            <IngredientDetails />
+          </Route>
+          <Route path="*">
+            <Error404 />
+          </Route>
+        </Switch>
+        {background && (
+          <Route
+            path="/ingredients/:id"
+            children={
+              <Modal handleClose={onClose}>
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        )}
+      </main>
+    )
   );
 }
 

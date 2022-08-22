@@ -1,0 +1,20 @@
+.profile_wrapper {
+  padding-top: 120px;
+  max-width: 960px;
+  display: flex;
+  gap: 60px;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  width: 1280px;
+  display: flex;
+  margin: 0 auto;
+}
+
+.profile_buttons {
+  display: flex;
+  justify-content: flex-end;
+  flex-grow: 1;
+  width: 100%;
+}

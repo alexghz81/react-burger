@@ -7,9 +7,11 @@ import {
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
 import { useDrag } from "react-dnd";
+import { Link, useLocation } from "react-router-dom";
 
-const IngredientsItem = ({ data, handleModal, numberOfIngredient }) => {
+const IngredientsItem = ({ data, numberOfIngredient }) => {
   const { _id, image, name, price, type } = data;
+  const location = useLocation();
   const [, dragRef] = useDrag({
     type: "ingredient",
     item: data,
@@ -17,10 +19,11 @@ const IngredientsItem = ({ data, handleModal, numberOfIngredient }) => {
       isDrag: monitor.isDragging(),
     }),
   });
+
   return (
-    <div
+    <Link
+      to={{ pathname: `/ingredients/${_id}`, state: { background: location } }}
       className={`${styles.ingredients_item}`}
-      onClick={() => handleModal(_id, "ingredient")}
       ref={dragRef}
     >
       <img src={image} alt={name} className={styles.ingredients_image} />
@@ -36,13 +39,12 @@ const IngredientsItem = ({ data, handleModal, numberOfIngredient }) => {
       {numberOfIngredient(_id, type) > 0 && (
         <Counter count={numberOfIngredient(_id, type)} size={"default"} />
       )}
-    </div>
+    </Link>
   );
 };
 
 IngredientsItem.propTypes = {
   data: ingredientPropType,
-  handleModal: PropTypes.func.isRequired,
   numberOfIngredient: PropTypes.func.isRequired,
 }.isRequired;
 
