@@ -27,12 +27,11 @@ function App() {
   const background = location.state?.background;
   const { allIngredients } = useSelector((state) => state.ingredients);
 
-  // useEffect(() => {
-  //   dispatch(fetchIngredients());
-  // }, [dispatch]);
-  //
   useEffect(() => {
     dispatch(fetchIngredients());
+  }, []);
+
+  useEffect(() => {
     if (getCookie("accessToken")) {
       dispatch(fetchUser());
     }
@@ -41,8 +40,6 @@ function App() {
   const onClose = useCallback(() => {
     history.goBack();
   });
-
-  console.log(allIngredients);
 
   return (
     allIngredients && (

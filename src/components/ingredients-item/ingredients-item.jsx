@@ -23,16 +23,16 @@ const IngredientsItem = ({ data, numberOfIngredient }) => {
     }),
   });
 
-  const onClick = () => {
-    dispatch(showModal({ title: "Детали ингредиента" }));
-  };
+  // const openModal = () => {
+  //   dispatch(showModal({ title: "Детали ингредиента" }));
+  // };
 
   return (
     <Link
       to={{ pathname: `/ingredients/${_id}`, state: { background: location } }}
       className={`${styles.ingredients_item}`}
       ref={dragRef}
-      onClick={onClick}
+      // onClick={openModal}
     >
       <img src={image} alt={name} className={styles.ingredients_image} />
       <div
