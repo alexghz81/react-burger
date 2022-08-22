@@ -32,13 +32,10 @@ const LeftMenu = () => {
         </li>
         <li>
           <NavLink
-            to="/login"
+            to="/logout"
             className={`${styles.link} text_type_main-medium pl-6 pr-6 pb-5 pt-4`}
             activeClassName={styles.active}
             exact
-            onClick={() => {
-              dispatch(fetchLogout(getCookie("refreshToken")));
-            }}
           >
             Выход
           </NavLink>

@@ -26,22 +26,6 @@ function Constructor() {
   //   dispatch(fetchIngredients());
   // }, [dispatch]);
 
-  const handleOpenModal = (id, type) => {
-    const title = "Детали ингредиента";
-    const [ingredientData] = allIngredients.filter((el) => el._id === id);
-    dispatch(getIngredient(ingredientData));
-    dispatch(showModal({ type: type, title: title }));
-    // } else {
-    //  const orderIngredients = ingredients.map((el) => el._id);
-    // if (bun._id) {
-    //   orderIngredients.push(bun._id);
-    //  orderIngredients.push(bun._id);
-    // }
-    //dispatch(fetchOrder(orderIngredients));
-    //dispatch(showModal({type: "order", title: ""}));
-    //dispatch(resetConstructor());
-  };
-
   const handleCloseModal = () => {
     dispatch(hideModal());
     dispatch(resetIngredient());
@@ -50,7 +34,7 @@ function Constructor() {
 
   return (
     <>
-      {isLoading ? <Spinner /> : <Content handleModal={handleOpenModal} />}
+      {isLoading ? <Spinner /> : <Content />}
       {visible && (
         <Modal handleClose={handleCloseModal}>
           {type === "ingredient" ? (

@@ -5,5 +5,6 @@ import Login from "./login"
 import Register from "./register"
 import ForgotPassword from "./forgot-password";
 import ResetPassword from "./reset-password";
+import Logout from "./logout"
 
-export { Constructor, OrdersFeed, Profile, Login, Register, ForgotPassword, ResetPassword };
+export { Constructor, OrdersFeed, Profile, Login, Register, ForgotPassword, ResetPassword, Logout };

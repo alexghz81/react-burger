@@ -13,6 +13,7 @@ import {
   Register,
   ForgotPassword,
   ResetPassword,
+  Logout,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
@@ -39,7 +40,7 @@ function App() {
 
   const onClose = useCallback(() => {
     history.goBack();
-  });
+  }, [history]);
 
   return (
     allIngredients && (
@@ -58,6 +59,9 @@ function App() {
           <ProtectedRoute path="/login" onlyGuest={true} exact>
             <Login />
           </ProtectedRoute>
+          <Route path="/logout">
+            <Logout />
+          </Route>
           <ProtectedRoute path="/register" onlyGuest={true} exact>
             <Register />
           </ProtectedRoute>

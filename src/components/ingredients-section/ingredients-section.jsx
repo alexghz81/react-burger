@@ -5,27 +5,17 @@ import IngredientsList from "../ingredients-list/ingredients-list";
 import styles from "./ingredients-section.module.css";
 import { ingredientPropType } from "../../utils/prop-types";
 
-const IngredientsSection = ({
-  title,
-  data,
-  handleModal,
-  numberOfIngredient,
-}) => {
+const IngredientsSection = ({ title, data, numberOfIngredient }) => {
   return (
     <div className={`${styles.ingredients_section}`}>
       <IngredientsTitle title={title} />
-      <IngredientsList
-        data={data}
-        handleModal={handleModal}
-        numberOfIngredient={numberOfIngredient}
-      />
+      <IngredientsList data={data} numberOfIngredient={numberOfIngredient} />
     </div>
   );
 };
 IngredientsSection.propTypes = {
   title: PropTypes.string.isRequired,
   data: ingredientPropType,
-  handleModal: PropTypes.func.isRequired,
   numberOfIngredients: PropTypes.func.isRequired,
 }.isRequired;
 

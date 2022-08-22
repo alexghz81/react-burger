@@ -9,7 +9,7 @@ const modalSlice = createSlice({
   },
   reducers: {
     showModal(state, action) {
-      // state.visible = true;
+      state.visible = action.payload.visible;
       state.type = action.payload.type;
       state.title = action.payload.title;
     },

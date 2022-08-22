@@ -7,7 +7,7 @@ const ProtectedRoute = ({ onlyGuest = false, children, ...rest }) => {
   const location = useLocation();
 
   if (onlyGuest && isAuthChecked) {
-    const { from } = location.state || { from: { pathname: "/" } };
+    const { from } = location?.state || { from: { pathname: "/" } };
     return (
       <Route {...rest}>
         <Redirect to={from} />
