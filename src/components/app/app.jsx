@@ -8,7 +8,6 @@ import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import {
   Constructor,
   Login,
-  OrdersFeed,
   Profile,
   Register,
   ForgotPassword,
@@ -50,9 +49,6 @@ function App() {
         <Switch location={background || location}>
           <Route path="/" exact>
             <Constructor />
-          </Route>
-          <Route path="/orders-feed" exact>
-            <OrdersFeed />
           </Route>
           <ProtectedRoute path="/profile" exact>
             <Profile />

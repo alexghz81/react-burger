@@ -48,12 +48,10 @@ export const refreshToken = () => {
     headers: {
       "Content-type": "application/json",
     },
-    body: JSON.stringify({ token: getCookie("refreshToken")}),
-  })
-    .then((res) => {
-      return checkResponse(res);
-    })
-    .catch((err) => console.log(err));
+    body: JSON.stringify({ token: getCookie("refreshToken") }),
+  }).then((res) => {
+    return checkResponse(res);
+  });
 };
 
 export const fetchWithRefresh = async (url, options) => {
@@ -68,7 +66,7 @@ export const fetchWithRefresh = async (url, options) => {
         return Promise.reject(refreshData);
       }
       setCookie("refreshToken", refreshData.refreshToken);
-      setCookie("accessToken", refreshData.accessToken.split('Bearer ')[1]);
+      setCookie("accessToken", refreshData.accessToken.split("Bearer ")[1]);
       options.headers.authorization = refreshData.accessToken;
       const res = await fetch(url, {
         ...options,
@@ -82,4 +80,8 @@ export const fetchWithRefresh = async (url, options) => {
       return Promise.reject(err);
     }
   }
+};
+
+export const sortIngredients = (ingredients) => {
+  return ingredients.sort((a) => (a.type === "bun" ? -1 : 1));
 };

@@ -1,0 +1,35 @@
+.wrapper {
+  margin: 40px auto 0;
+  display: flex;
+  max-height: 84vh;
+  text-align: start;
+  box-sizing: border-box;
+  gap: 60px;
+}
+
+.orders_wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.orders_wrapper::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.orders_wrapper::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  height: 492px;
+}
+
+.orders_feed {
+  /*overflow: auto;*/
+  display: flex;
+  flex-direction: column;
+}
+
+.orders_status {
+
+}
+
+.orders_wrapper {
+  overflow: auto;
+}
