@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styles from "./orders-item.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
 import { sortIngredients } from "../../utils/utils";
+import moment from "moment";
+import "moment/locale/ru";
+import { v4 as uuid } from "uuid";
+import OrderIngredientImage from "../order-ingredient-image/order-ingredient-image";
 
 const OrdersItem = ({ order, status }) => {
-  const { number, ingredients, price, name } = order;
+  const { number, ingredients, name, createdAt } = order;
   const { allIngredients } = useSelector((state) => state.ingredients);
   const { path } = useRouteMatch();
   const history = useHistory();
-  const remainingIngredients = ingredients.length - 5;
   const [ingredientsArray, setIngredientsArray] = useState([]);
 
   useEffect(() => {
-    if (ingredients.length && allIngredients.length) {
+    if (ingredients.length > 0 && allIngredients.length > 0) {
       const orderIngredients = [];
       ingredients.forEach((item) => {
         const ingredient = allIngredients.filter((elem) => elem._id === item);
-        if (ingredient) {
+        if (ingredient.length > 0) {
           if (
             ingredient[0].type === "bun" &&
             ingredients.find((el) => el._id === ingredient[0]._id)
@@ -32,20 +35,27 @@ const OrdersItem = ({ order, status }) => {
     }
   }, [allIngredients, ingredients]);
 
-  console.log("ingredients Array ", ingredientsArray);
-
-  const handleClick = () => {
-    history.push(path);
-    history.replace(`${path}/${order.number}`);
-  };
+  const orderPrice = ingredientsArray.reduce((sum, el) => sum + el.price, 0);
+  const date = new Date();
+  const dateOffset = date.getTimezoneOffset();
+  moment.locale("ru");
+  const orderDate = moment
+    .utc(createdAt)
+    .utcOffset(-dateOffset)
+    .locale("ru")
+    .calendar();
+  // const handleClick = () => {
+  //   history.push(path);
+  //   history.replace(`${path}/${order.number}`);
+  // };
 
   return (
     ingredientsArray.length > 0 && (
-      <div className={styles.wrapper} onClick={handleClick}>
+      <div className={styles.wrapper}>
         <div className={`${styles.header} mb-6`}>
           <span className="text text_type_digits-default">{`#${number}`}</span>
           <span className="text text_type_main-default text_color_inactive">
-            Сегодня, 00:00 i-GMT+3
+            {orderDate} i-GMT+3
           </span>
         </div>
         <div className={`${styles.order_name} text text_type_main-medium mb-6`}>
@@ -53,57 +63,37 @@ const OrdersItem = ({ order, status }) => {
         </div>
         <div className={`${styles.ingredients} mt-6`}>
           <div className={styles.images}>
-            {ingredientsArray.length < 6 &&
-              ingredientsArray.map((ingredient, index) => (
-                <div
-                  className={styles.element}
-                  style={{ zIndex: 6 - index, left: `-${16 * index}px` }}
-                  key={Math.random() * (500 - 10) + 10}
-                >
-                  <img
-                    src={ingredient.image_mobile}
-                    alt={ingredient.name}
-                    className={styles.little_image}
+            {ingredientsArray.map((ingredient, index) => {
+              if (index < 5) {
+                return (
+                  <OrderIngredientImage
+                    key={uuid()}
+                    {...ingredient}
+                    index={index}
                   />
-                </div>
-              ))}
-            {ingredients.length > 5 &&
-              ingredients.slice(0, 5).map((ingredient, index) => (
-                <div
-                  className={styles.element}
-                  style={{ zIndex: 6 - index, left: `-${25 * index}px` }}
-                  key={Math.random() * (200 - 10) + 10}
-                >
-                  <img src={ingredient.image_mobile} alt={ingredient.name} />
-                </div>
-              ))}
-            {/*{ingredients.length > 5 && (*/}
-            {/*  <div*/}
-            {/*    className={styles.element}*/}
-            {/*    style={{ zIndex: 1, left: `-125px` }}*/}
-            {/*    key={Math.random() * (200 - 10) + 10}*/}
-            {/*  >*/}
-            {/*    <img*/}
-            {/*      className={styles.bigOrder__image}*/}
-            {/*      src={bigOrderImage}*/}
-            {/*      alt={`+${remainingOrder} дополнительны${*/}
-            {/*        remainingOrder === 1 ? "й" : "х"*/}
-            {/*      } ингредиент${*/}
-            {/*        remainingOrder === 1 ? "" : remainingOrder > 4 ? "ов" : "а"*/}
-            {/*      } в заказе`}*/}
-            {/*    />*/}
-            {/*<span className={styles.bigOrder}>{`+${remainingIngredients}`}</span>*/}
+                );
+              } else if (index === 5) {
+                return (
+                  <OrderIngredientImage
+                    key={uuid()}
+                    {...ingredient}
+                    number={ingredientsArray.length - 5}
+                    overlay={true}
+                    index={index}
+                  />
+                );
+              }
+            })}
           </div>
-          <span
+          <div
             className={`${styles.total__cost} text text_type_digits-default`}
           >
-            {price}
+            {orderPrice}
             <CurrencyIcon type="primary" />
-          </span>
+          </div>
         </div>
       </div>
     )
   );
 };
-
 export default OrdersItem;

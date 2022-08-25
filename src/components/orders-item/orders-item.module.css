@@ -24,6 +24,7 @@
 .ingredients {
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 
 .element {
@@ -46,15 +47,14 @@
 
 .images {
   display: flex;
+  position: relative;
+}
+
+.total__cost {
+  display: flex;
+  align-items: center;
 }
 
 .total__cost svg {
   margin-left: 8px;
-}
-
-.bigOrder {
-  position: absolute;
-  right: 20px;
-  font-size: 16px;
-  color: #F2F2F3;
 }
