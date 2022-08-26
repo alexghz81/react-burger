@@ -85,3 +85,14 @@ export const fetchWithRefresh = async (url, options) => {
 export const sortIngredients = (ingredients) => {
   return ingredients.sort((a) => (a.type === "bun" ? -1 : 1));
 };
+
+export const divideOrdersArray = (ordersArray, callback) => {
+  let allOrders = [];
+  for (let j = 0; j < ordersArray.length; j += 10) {
+    let ordersColumn = [];
+    ordersColumn = ordersArray.slice(j, j + 10);
+    const ordersNumbersColumn = ordersColumn.map((item) => item.number);
+    allOrders.push(ordersNumbersColumn);
+  }
+  callback(allOrders);
+};

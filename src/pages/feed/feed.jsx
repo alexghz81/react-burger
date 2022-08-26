@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import styles from "./feed.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -7,11 +7,17 @@ import {
 } from "../../services/reducers/ws-slice";
 import { ORDERS_URL } from "../../utils/constants";
 import OrdersList from "../../components/orders-list/orders-list";
+import OrderStatus from "../../utils/order-status";
+import { divideOrdersArray } from "../../utils/utils";
+import OrderNumber from "../../components/order-number/order-number";
+import { v4 as uuid } from "uuid";
 
 const Feed = () => {
   const { wsConnected, wsMessages } = useSelector((state) => state.ws);
   const dispatch = useDispatch();
   const { orders = [], total, totalToday } = wsMessages;
+  const [doneOrdersList, setDoneOrdersList] = useState();
+  const [pendingOrdersList, setPendingOrdersList] = useState();
 
   useEffect(() => {
     if (!wsConnected) {
@@ -20,9 +26,24 @@ const Feed = () => {
     return () => dispatch(wsConnectionClosed());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   dispatch(wsGetMessage());
-  // }, [wsMessages]);
+  const doneOrders = useMemo(() => {
+    return (
+      orders.length > 0 &&
+      orders.filter((order) => order.status === OrderStatus.done.type)
+    );
+  }, [orders]);
+
+  const pendingOrders = useMemo(() => {
+    return (
+      orders.length > 0 &&
+      orders.filter((order) => order.status === OrderStatus.pending.type)
+    );
+  }, [orders]);
+
+  useEffect(() => {
+    doneOrders && divideOrdersArray(doneOrders, setDoneOrdersList);
+    pendingOrders && divideOrdersArray(pendingOrders, setPendingOrdersList);
+  }, [doneOrders, pendingOrders, setDoneOrdersList, setPendingOrdersList]);
 
   return (
     orders.length > 0 && (
@@ -39,7 +60,10 @@ const Feed = () => {
               <div
                 className={`${styles.completed_orders_numbers} text text_type_digits-default mb-2`}
               >
-                12345
+                {doneOrdersList &&
+                  doneOrdersList.map((item) => (
+                    <OrderNumber number={item} key={uuid()} />
+                  ))}
               </div>
             </div>
             <div className={styles.in_progress_orders}>
@@ -51,7 +75,10 @@ const Feed = () => {
               <div
                 className={`${styles.orders_numbers} text text_type_digits-default mb-2`}
               >
-                5678
+                {pendingOrdersList &&
+                  pendingOrdersList.map((item) => (
+                    <OrderNumber number={item} key={uuid()} />
+                  ))}
               </div>
             </div>
           </div>

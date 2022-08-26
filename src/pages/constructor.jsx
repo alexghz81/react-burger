@@ -2,7 +2,7 @@ import Spinner from "../components/spinner/spinner";
 import Content from "../components/content/content";
 import Modal from "../components/hocs/modal/modal";
 import IngredientDetails from "../components/ingredient-details/ingredient-details";
-import OrderDetails from "../components/order-details/order-details";
+import OrderConfirm from "../components/order-confirm/order-confirm";
 import React from "react";
 import { hideModal } from "../services/reducers/modal-slice";
 import { resetIngredient } from "../services/reducers/ingredient-slice";
@@ -32,7 +32,7 @@ function Constructor() {
           ) : pending ? (
             <Spinner />
           ) : (
-            <OrderDetails />
+            <OrderConfirm />
           )}
         </Modal>
       )}

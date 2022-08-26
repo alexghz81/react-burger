@@ -46,7 +46,7 @@
 }
 
 .completed_orders {
- flex-grow: 1;
+  flex-grow: 1;
 }
 
 .completed_orders_numbers {
@@ -57,9 +57,13 @@
 
 }
 
+.today_orders {
+  
+}
+
 .in_progress_orders {
   margin-bottom: 24px;
- flex-grow: 1;
+  flex-grow: 1;
 }
 
 .all_time_orders {
