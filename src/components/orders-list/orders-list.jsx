@@ -3,6 +3,8 @@ import styles from "../../pages/feed/feed.module.css";
 import { Link, useLocation, useRouteMatch } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import OrdersItem from "../orders-item/orders-item";
+import { ingredientPropType } from "../../utils/prop-types";
+import PropTypes from "prop-types";
 
 const OrdersList = ({ orders }) => {
   const match = useRouteMatch();
@@ -30,6 +32,10 @@ const OrdersList = ({ orders }) => {
       </div>
     </div>
   );
+};
+
+OrdersList.propTypes = {
+  orders: PropTypes.arrayOf(PropTypes.shape(ingredientPropType)).isRequired,
 };
 
 export default OrdersList;
