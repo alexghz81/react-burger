@@ -6,7 +6,7 @@ const OrderIngredientImage = ({
   overlay,
   number,
   name,
-  index,
+  index = 0,
 }) => {
   return (
     <>

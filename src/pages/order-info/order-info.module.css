@@ -1,0 +1,67 @@
+.order_info_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 640px;
+}
+
+.order_number {
+  margin: 0 auto;
+}
+
+.order_name {
+  text-align: start;
+}
+
+.ready {
+  color: #00CCCC;
+}
+
+.pending {
+
+}
+
+.ingredients_wrapper {
+  padding: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-inline-start: 0;
+  list-style-type: none;
+  margin-bottom: 40px;
+}
+
+.ingredient_wrapper {
+  display: flex;
+  text-decoration: none;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.name {
+  flex-grow: 1;
+  text-align: start;
+}
+
+.cost {
+  display: flex;
+  text-align: center;
+  align-self: center;
+}
+
+.currency {
+  align-self: center;
+  margin-left: 8px;
+}
+
+.info_wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.price_wrapper{
+  display: flex;
+  gap: 8px;
+}

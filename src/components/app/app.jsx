@@ -14,6 +14,7 @@ import {
   ResetPassword,
   Logout,
   Feed,
+  OrderInfo,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
@@ -78,16 +79,27 @@ function App() {
             <Error404 />
           </Route>
         </Switch>
-        {background && (
-          <Route
-            path="/ingredients/:id"
-            children={
-              <Modal handleClose={onClose}>
-                <IngredientDetails />
-              </Modal>
-            }
-          />
-        )}
+        {background &&
+          ((background.pathname === "/" && (
+            <Route
+              path="/ingredients/:id"
+              children={
+                <Modal handleClose={onClose}>
+                  <IngredientDetails />
+                </Modal>
+              }
+            />
+          )) ||
+            (background.pathname.includes("/feed") && (
+              <Route
+                path="/feed/:id"
+                children={
+                  <Modal handleClose={onClose}>
+                    <OrderInfo />
+                  </Modal>
+                }
+              />
+            )))}
       </main>
     )
   );
