@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
 import checkResponse from "../../utils/check-response";
+import { getCookie } from "../../utils/utils";
 
 export const fetchOrder = createAsyncThunk(
   "modal/fetchOrder",
@@ -10,6 +11,7 @@ export const fetchOrder = createAsyncThunk(
         method: "POST",
         headers: {
           "Content-type": "application/json",
+          Authorization: "Bearer " + getCookie("accessToken"),
         },
         body: JSON.stringify({ ingredients: ingredients }),
       });

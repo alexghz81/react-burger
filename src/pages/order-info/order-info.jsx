@@ -13,8 +13,9 @@ import { getCookie, sortIngredients } from "../../utils/utils";
 import styles from "./order-info.module.css";
 import OrderIngredientImage from "../../components/order-ingredient-image/order-ingredient-image";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
+import PropTypes from "prop-types";
 
-const OrderInfo = () => {
+const OrderInfo = ({ modal = false }) => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const { allIngredients } = useSelector((state) => state.ingredients);
@@ -33,12 +34,33 @@ const OrderInfo = () => {
             : ORDERS_URL
         )
       );
-      return () => dispatch(wsConnectionClosed());
     }
+    return () => wsConnected && dispatch(wsConnectionClosed());
   }, [wsConnected, dispatch]);
 
+  const getOrder = () => {
+    if (!order) {
+      const ord =
+        wsMessages.length !== 0 &&
+        wsMessages?.orders.find((order) => order._id === id);
+      setOrder(ord);
+    }
+  };
+
+  useEffect(() => {
+    getOrder();
+  }, [wsMessages.orders, allIngredients, order]);
+
+  useEffect(() => {
+    location.state = null;
+  }, []);
+
   const getIngredient = (id) => {
-    return allIngredients.find((item) => item._id === id);
+    let result = null;
+    if (allIngredients.length > 0) {
+      result = allIngredients.find((item) => item._id === id);
+      return result;
+    }
   };
 
   const count = (array) => {
@@ -46,60 +68,63 @@ const OrderInfo = () => {
       return stack[value] ? stack[value]++ : (stack[value] = 1), stack;
     }, {});
   };
-  const countIngredients = count(order.ingredients);
+  const countIngredients = order?.ingredients && count(order?.ingredients);
 
   const getIngredientsData = () => {
     const data = [];
-    const uniqIngredients = [...new Set(order.ingredients)];
-    order &&
-      uniqIngredients.forEach((id) => {
-        data.push(getIngredient(id));
-      });
+    const uniqIngredients = [...new Set(order?.ingredients)];
+    uniqIngredients.forEach((id) => {
+      data.push(getIngredient(id));
+    });
     setData(sortIngredients(data));
   };
 
   const getPrice = () => {
     const price = [];
-    order && order.ingredients.forEach((id) => price.push(getIngredient(id)));
-    setOrderPrice(price.reduce((acc, el) => acc + el.price, 0));
+    allIngredients.length > 0 &&
+      order &&
+      order?.ingredients.forEach((id) => {
+        price?.push(getIngredient(id));
+      });
+    allIngredients.length > 0 &&
+      price &&
+      setOrderPrice(price?.reduce((acc, el) => acc + el?.price, 0));
   };
 
   useEffect(() => {
-    getPrice();
-  }, [order]);
-
-  useEffect(() => {
     getIngredientsData();
+    getPrice();
   }, [allIngredients, order]);
 
   const date = new Date();
   const dateOffset = date.getTimezoneOffset();
   moment.locale("ru");
-  const orderDate = moment
-    .utc(order.createdAt)
-    .utcOffset(-dateOffset)
-    .locale("ru")
-    .calendar();
+  const orderDate =
+    order &&
+    moment.utc(order.createdAt).utcOffset(-dateOffset).locale("ru").calendar();
 
   return (
     <>
       {order && data && countIngredients && (
-        <div className={styles.order_info_wrapper}>
+        <div
+          style={!modal ? { marginTop: 122 + "px" } : {}}
+          className={styles.order_info_wrapper}
+        >
           <h3 className={`${styles.order_number} text text_type_main-medium`}>
             # {order?.number}
           </h3>
           <p
             className={`${styles.order_name} text text_type_main-medium mb-3 mt-10`}
           >
-            {order.name}
+            {order?.name}
           </p>
           <p
             className={
-              (order.status === OrderStatus.done.type ? styles.ready : "") +
+              (order?.status === OrderStatus.done.type ? styles.ready : "") +
               " text text_type_main-default mb-15"
             }
           >
-            {OrderStatus[order.status].text}
+            {OrderStatus[order?.status].text}
           </p>
           <p className="text text_type_main-medium mb-6">Состав:</p>
           <ul
@@ -135,5 +160,9 @@ const OrderInfo = () => {
     </>
   );
 };
+
+OrderInfo.propTypes = {
+  modal: PropTypes.bool.isRequired,
+}.isRequired;
 
 export default OrderInfo;

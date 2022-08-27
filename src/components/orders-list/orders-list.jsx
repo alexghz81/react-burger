@@ -9,9 +9,11 @@ const OrdersList = ({ orders }) => {
   const location = useLocation();
   return (
     <div className={styles.orders_feed}>
-      <div>
-        <h1 className="text text_type_main-large pb-5">Лента заказов</h1>
-      </div>
+      {!location.pathname.includes("profile") && (
+        <div>
+          <h1 className="text text_type_main-large pb-5">Лента заказов</h1>
+        </div>
+      )}
       <div className={`${styles.orders_wrapper} pr-2`}>
         {orders.map((order) => (
           <Link

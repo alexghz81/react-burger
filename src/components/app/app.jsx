@@ -15,6 +15,7 @@ import {
   Logout,
   Feed,
   OrderInfo,
+  ProfileOrders,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
@@ -51,7 +52,7 @@ function App() {
           <Route path="/" exact>
             <Constructor />
           </Route>
-          <ProtectedRoute path="/profile" exact>
+          <ProtectedRoute path="/profile" exact onlyGuest={false}>
             <Profile />
           </ProtectedRoute>
           <ProtectedRoute path="/login" onlyGuest={true} exact>
@@ -72,9 +73,18 @@ function App() {
           <Route path="/ingredients/:id" exact>
             <IngredientDetails />
           </Route>
-          <Route path="/feed">
+          <Route path="/feed" exact>
             <Feed />
           </Route>
+          <Route path="/feed/:id" exact>
+            <OrderInfo />
+          </Route>
+          <ProtectedRoute path="/profile/orders" exact onlyGuest={false}>
+            <ProfileOrders />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders/:id" exact onlyGuest={false}>
+            <OrderInfo />
+          </ProtectedRoute>
           <Route path="*">
             <Error404 />
           </Route>
@@ -95,7 +105,17 @@ function App() {
                 path="/feed/:id"
                 children={
                   <Modal handleClose={onClose}>
-                    <OrderInfo />
+                    <OrderInfo modal={true} />
+                  </Modal>
+                }
+              />
+            )) ||
+            (background.pathname.includes("/orders") && (
+              <Route
+                path="/profile/orders/:id"
+                children={
+                  <Modal handleClose={onClose}>
+                    <OrderInfo modal={true} />
                   </Modal>
                 }
               />

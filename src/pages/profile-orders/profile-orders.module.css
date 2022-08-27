@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  margin: 0 auto;
+}
+
+.profile_wrapper {
+  display: flex;
+  margin-top: 40px;
+  gap: 60px;
+  width: 1280px;
+}
+
+.left_menu_wrapper {
+  margin-top: 80px;
+}
+
+.profile_orders {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.orders_wrapper {
+  overflow: auto;
+  display: flex;
+  flex-grow: 1;
+  max-height: 84vh;
+}

@@ -8,6 +8,7 @@ import moment from "moment";
 import "moment/locale/ru";
 import { v4 as uuid } from "uuid";
 import OrderIngredientImage from "../order-ingredient-image/order-ingredient-image";
+import OrderStatus from "../../utils/order-status";
 
 const OrdersItem = ({ order, status }) => {
   const { number, ingredients, name, createdAt } = order;
@@ -58,9 +59,20 @@ const OrdersItem = ({ order, status }) => {
             {orderDate} i-GMT+3
           </span>
         </div>
-        <div className={`${styles.order_name} text text_type_main-medium mb-6`}>
+        <div className={`${styles.order_name} text text_type_main-medium`}>
           {name}
         </div>
+        {location.pathname.includes("orders") && (
+          <p
+            className={
+              (order?.status === OrderStatus.done.type
+                ? styles.ready
+                : styles.not_ready) + " text text_type_main-default mb-6 mt-2"
+            }
+          >
+            {OrderStatus[order.status].text}
+          </p>
+        )}
         <div className={`${styles.ingredients} mt-6`}>
           <div className={styles.images}>
             {ingredientsArray.map((ingredient, index) => {

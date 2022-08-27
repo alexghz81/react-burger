@@ -22,6 +22,7 @@
 }
 
 .orders_feed {
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
@@ -80,6 +81,7 @@
 }
 
 .link {
+  display: flex;
   text-decoration: none;
   color: #ffffff;
 }

@@ -8,6 +8,7 @@
   width: 584px;
   background: #1C1C21;
   padding: 24px;
+  flex-grow: 1;
 }
 
 .order_name {
@@ -26,6 +27,8 @@
   justify-content: space-between;
   position: relative;
 }
+
+
 
 .element {
   display: flex;
@@ -57,4 +60,14 @@
 
 .total__cost svg {
   margin-left: 8px;
+}
+
+.ready {
+  color: #00CCCC;
+  text-align: start;
+}
+
+.not_ready {
+  color: #ffffff;
+  text-align: start;
 }

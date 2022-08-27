@@ -96,3 +96,12 @@ export const divideOrdersArray = (ordersArray, callback) => {
   }
   callback(allOrders);
 };
+
+export const getOrderByNumber = (number) => {
+  return fetch(`${API_URL}/orders/${number}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then(checkResponse);
+};

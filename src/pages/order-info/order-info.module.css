@@ -4,6 +4,7 @@
   justify-content: center;
   box-sizing: border-box;
   width: 640px;
+  margin: 0 auto;
 }
 
 .order_number {
@@ -16,6 +17,7 @@
 
 .ready {
   color: #00CCCC;
+  text-align: start;
 }
 
 .pending {

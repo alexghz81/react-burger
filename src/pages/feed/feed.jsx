@@ -23,8 +23,8 @@ const Feed = () => {
     if (!wsConnected) {
       dispatch(wsConnectionStart(ORDERS_URL));
     }
-    return () => dispatch(wsConnectionClosed());
-  }, [dispatch]);
+    return () => wsConnected && dispatch(wsConnectionClosed());
+  }, [wsConnected, dispatch]);
 
   const doneOrders = useMemo(() => {
     return (
