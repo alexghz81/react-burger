@@ -1,7 +1,6 @@
 import React from "react";
 import styles from "../../pages/feed/feed.module.css";
 import { Link, useLocation, useRouteMatch } from "react-router-dom";
-import { v4 as uuid } from "uuid";
 import OrdersItem from "../orders-item/orders-item";
 import { ingredientPropType } from "../../utils/prop-types";
 import PropTypes from "prop-types";
@@ -17,10 +16,10 @@ const OrdersList = ({ orders }) => {
         </div>
       )}
       <div className={`${styles.orders_wrapper} pr-2`}>
-        {orders.map((order) => (
+        {orders.map((order, index) => (
           <Link
             className={styles.link}
-            key={uuid()}
+            key={order._id}
             to={{
               pathname: `${match.url}/${order._id}`,
               state: { background: location, data: order },

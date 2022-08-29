@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styles from "./orders-item.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { sortIngredients } from "../../utils/utils";
 import moment from "moment";
 import "moment/locale/ru";
-import { v4 as uuid } from "uuid";
 import OrderIngredientImage from "../order-ingredient-image/order-ingredient-image";
 import OrderStatus from "../../utils/order-status";
 
@@ -70,7 +69,7 @@ const OrdersItem = ({ order, status }) => {
                 : styles.not_ready) + " text text_type_main-default mb-6 mt-2"
             }
           >
-            {OrderStatus[order.status].text}
+            {OrderStatus[order?.status]?.text}
           </p>
         )}
         <div className={`${styles.ingredients} mt-6`}>
@@ -79,7 +78,7 @@ const OrdersItem = ({ order, status }) => {
               if (index < 5) {
                 return (
                   <OrderIngredientImage
-                    key={uuid()}
+                    key={index}
                     {...ingredient}
                     index={index}
                   />
@@ -87,7 +86,7 @@ const OrdersItem = ({ order, status }) => {
               } else if (index === 5) {
                 return (
                   <OrderIngredientImage
-                    key={uuid()}
+                    key={index}
                     {...ingredient}
                     number={ingredientsArray.length - 5}
                     overlay={true}

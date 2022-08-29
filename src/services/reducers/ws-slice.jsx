@@ -39,20 +39,6 @@ const wsSlice = createSlice({
     wsSendMessage(state, action) {
       state.wsSendMessage = action.payload;
     },
-    // wsAuthConnectionSuccess(state) {
-    //   state.wsAuthConnected = true;
-    // },
-    // wsAuthConnectionError(state, action) {
-    //   state.wsAuthConnected = false;
-    //   state.wsAuthError = action.payload;
-    // },
-    // wsAuthConnectionClosed(state, action) {
-    //   state.wsAuthConnected = false;
-    //   state.wsAuthError = null;
-    // },
-    // wsGetAuthMessage(state, action) {
-    //   state.wsAuthMessage = action.payload;
-    // },
   },
 });
 
@@ -63,9 +49,5 @@ export const {
   wsConnectionClosed,
   wsGetMessage,
   wsSendMessage,
-  // wsAuthConnectionSuccess,
-  // wsAuthConnectionError,
-  // wsAuthConnectionClosed,
-  // wsGetAuthMessage,
 } = wsSlice.actions;
 export default wsSlice.reducer;

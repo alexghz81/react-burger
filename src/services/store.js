@@ -10,17 +10,14 @@ import loginReducer from "./reducers/auth-slice";
 import forgotPasswordReducer from "./reducers/forgot-password-slice";
 import resetPasswordReducer from "./reducers/reset-password-slice";
 import registerReducer from "./reducers/register-slice";
-import wsReducer, {wsSendMessage} from "./reducers/ws-slice";
+import wsReducer from "./reducers/ws-slice";
 import {
   wsConnectionStart,
   wsConnectionSuccess,
   wsConnectionError,
   wsConnectionClosed,
   wsGetMessage,
-  // wsAuthConnectionSuccess,
-  // wsAuthConnectionError,
-  // wsAuthConnectionClosed,
-  // wsGetAuthMessage,
+  wsSendMessage,
 } from "./reducers/ws-slice";
 import { socketMiddleware } from "./socketMiddleware";
 
@@ -30,11 +27,7 @@ const wsActions = {
   onClose: wsConnectionClosed,
   onError: wsConnectionError,
   onMessage: wsGetMessage,
-  onSendMessage: wsSendMessage
-  // onAuthOpen: wsAuthConnectionSuccess,
-  // onAuthError: wsAuthConnectionError,
-  // onAuthClose: wsAuthConnectionClosed,
-  // onAuthMessage: wsGetAuthMessage,
+  onSendMessage: wsSendMessage,
 };
 
 export default configureStore({

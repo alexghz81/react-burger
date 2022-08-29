@@ -10,7 +10,6 @@ import OrdersList from "../../components/orders-list/orders-list";
 import OrderStatus from "../../utils/order-status";
 import { divideOrdersArray } from "../../utils/utils";
 import OrderNumber from "../../components/order-number/order-number";
-import { v4 as uuid } from "uuid";
 
 const Feed = () => {
   const { wsConnected, wsMessages } = useSelector((state) => state.ws);
@@ -61,9 +60,9 @@ const Feed = () => {
                 className={`${styles.completed_orders_numbers} text text_type_digits-default mb-2`}
               >
                 {doneOrdersList &&
-                  doneOrdersList.map((item) => (
-                    <OrderNumber number={item} key={uuid()} />
-                  ))}
+                  doneOrdersList.map((item, index) => {
+                    return <OrderNumber number={item} key={index} />;
+                  })}
               </div>
             </div>
             <div className={styles.in_progress_orders}>
@@ -76,8 +75,8 @@ const Feed = () => {
                 className={`${styles.orders_numbers} text text_type_digits-default mb-2`}
               >
                 {pendingOrdersList &&
-                  pendingOrdersList.map((item) => (
-                    <OrderNumber number={item} key={uuid()} />
+                  pendingOrdersList.map((item, index) => (
+                    <OrderNumber number={item} key={index} />
                   ))}
               </div>
             </div>
