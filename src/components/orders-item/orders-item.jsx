@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
 import styles from "./orders-item.module.css";
 import { CurrencyIcon } from "@ya.praktikum/react-developer-burger-ui-components";
 import { useSelector } from "react-redux";
@@ -9,11 +8,9 @@ import "moment/locale/ru";
 import OrderIngredientImage from "../order-ingredient-image/order-ingredient-image";
 import OrderStatus from "../../utils/order-status";
 
-const OrdersItem = ({ order, status }) => {
+const OrdersItem = ({ order }) => {
   const { number, ingredients, name, createdAt } = order;
   const { allIngredients } = useSelector((state) => state.ingredients);
-  const { path } = useRouteMatch();
-  const history = useHistory();
   const [ingredientsArray, setIngredientsArray] = useState([]);
 
   useEffect(() => {
@@ -44,10 +41,6 @@ const OrdersItem = ({ order, status }) => {
     .utcOffset(-dateOffset)
     .locale("ru")
     .calendar();
-  // const handleClick = () => {
-  //   history.push(path);
-  //   history.replace(`${path}/${order.number}`);
-  // };
 
   return (
     ingredientsArray.length > 0 && (

@@ -6,8 +6,9 @@ const initialState = {
   wsMessages: [],
   wsError: null,
   wsConnecting: false,
+  wsAuthConnecting: false,
   wsAuthConnected: false,
-  wsAuthMessage: [],
+  wsAuthMessages: [],
   wsAuthError: null,
   wsSendMessage: null,
 };
@@ -39,6 +40,22 @@ const wsSlice = createSlice({
     wsSendMessage(state, action) {
       state.wsSendMessage = action.payload;
     },
+    wsAuthConnectionSuccess(state) {
+      state.wsAuthConnected = true;
+      state.wsConnecting = false;
+    },
+    wsGetAuthMessages(state, action) {
+      state.wsAuthMessages = action.payload;
+    },
+    wsAuthConnectionClosed(state) {
+      state.wsAuthConnected = false;
+    },
+    wsAuthConnectionStart(state) {
+      state.wsAuthConnecting = true;
+      state.wsError = false;
+      state.wsAuthConnected = false;
+      state.wsAuthMessages = [];
+    },
   },
 });
 
@@ -49,5 +66,9 @@ export const {
   wsConnectionClosed,
   wsGetMessage,
   wsSendMessage,
+  wsAuthConnectionSuccess,
+  wsGetAuthMessages,
+  wsAuthConnectionClosed,
+  wsAuthConnectionStart,
 } = wsSlice.actions;
 export default wsSlice.reducer;

@@ -18,6 +18,10 @@ import {
   wsConnectionClosed,
   wsGetMessage,
   wsSendMessage,
+  wsAuthConnectionSuccess,
+  wsGetAuthMessages,
+  wsAuthConnectionClosed,
+  wsAuthConnectionStart,
 } from "./reducers/ws-slice";
 import { socketMiddleware } from "./socketMiddleware";
 
@@ -27,6 +31,15 @@ const wsActions = {
   onClose: wsConnectionClosed,
   onError: wsConnectionError,
   onMessage: wsGetMessage,
+  onSendMessage: wsSendMessage,
+};
+
+const wsAuthActions = {
+  onStart: wsAuthConnectionStart,
+  onOpen: wsAuthConnectionSuccess,
+  onClose: wsAuthConnectionClosed,
+  onError: wsConnectionError,
+  onMessage: wsGetAuthMessages,
   onSendMessage: wsSendMessage,
 };
 
@@ -46,7 +59,7 @@ export default configureStore({
     ws: wsReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat(
-      socketMiddleware(wsActions)
-    ),
+    getDefaultMiddleware({ serializableCheck: false })
+      .concat(socketMiddleware(wsActions))
+      .concat(socketMiddleware(wsAuthActions)),
 });

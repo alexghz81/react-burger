@@ -12,18 +12,18 @@ import { divideOrdersArray } from "../../utils/utils";
 import OrderNumber from "../../components/order-number/order-number";
 
 const Feed = () => {
-  const { wsConnected, wsMessages } = useSelector((state) => state.ws);
+  const { wsMessages } = useSelector((state) => state.ws);
   const dispatch = useDispatch();
   const { orders = [], total, totalToday } = wsMessages;
   const [doneOrdersList, setDoneOrdersList] = useState();
   const [pendingOrdersList, setPendingOrdersList] = useState();
 
   useEffect(() => {
-    if (!wsConnected) {
-      dispatch(wsConnectionStart(ORDERS_URL));
-    }
-    return () => wsConnected && dispatch(wsConnectionClosed());
-  }, [wsConnected, dispatch]);
+    dispatch(wsConnectionStart(ORDERS_URL));
+    return () => {
+      dispatch(wsConnectionClosed());
+    };
+  }, [dispatch]);
 
   const doneOrders = useMemo(() => {
     return (

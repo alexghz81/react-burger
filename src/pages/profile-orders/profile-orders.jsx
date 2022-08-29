@@ -4,29 +4,25 @@ import LeftMenu from "../../components/left-menu/left-menu";
 import { useDispatch, useSelector } from "react-redux";
 import OrdersList from "../../components/orders-list/orders-list";
 import {
-  wsConnectionClosed,
-  wsConnectionStart,
+  wsAuthConnectionClosed,
+  wsAuthConnectionStart,
 } from "../../services/reducers/ws-slice";
-import { ORDERS_URL, PROFILE_ORDERS_URL } from "../../utils/constants";
+import { PROFILE_ORDERS_URL } from "../../utils/constants";
 import { getCookie } from "../../utils/utils";
 
 const ProfileOrders = () => {
-  const { wsConnected, wsMessages } = useSelector((state) => state.ws);
-  const { orders = [] } = wsMessages;
+  const { wsAuthMessages } = useSelector((state) => state.ws);
+  const { orders = [] } = wsAuthMessages;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!wsConnected) {
-      dispatch(
-        wsConnectionStart(
-          location.pathname.includes("orders")
-            ? `${PROFILE_ORDERS_URL}?token=${getCookie("accessToken")}`
-            : ORDERS_URL
-        )
-      );
-    }
-    return () => wsConnected && dispatch(wsConnectionClosed());
-  }, [wsConnected, dispatch]);
+    dispatch(
+      wsAuthConnectionStart(
+        `${PROFILE_ORDERS_URL}?token=${getCookie("accessToken")}`
+      )
+    );
+    return () => dispatch(wsAuthConnectionClosed());
+  }, [dispatch]);
 
   return (
     <div className={styles.wrapper}>

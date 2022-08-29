@@ -5,7 +5,6 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import {
@@ -15,7 +14,6 @@ import {
   resetConstructor,
 } from "../../services/reducers/constructor-slice";
 import ConstructorItem from "../constructor-item/constructor-item";
-import { getIngredient } from "../../services/reducers/ingredient-slice";
 import { showModal } from "../../services/reducers/modal-slice";
 import { fetchOrder } from "../../services/reducers/order-slice";
 import { useHistory } from "react-router-dom";
@@ -145,9 +143,5 @@ const BurgerConstructor = () => {
     </section>
   );
 };
-
-// BurgerConstructor.propTypes = {
-//   handleModal: PropTypes.func.isRequired,
-// }.isRequired;
 
 export default React.memo(BurgerConstructor);

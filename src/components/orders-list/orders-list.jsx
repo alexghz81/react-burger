@@ -16,7 +16,7 @@ const OrdersList = ({ orders }) => {
         </div>
       )}
       <div className={`${styles.orders_wrapper} pr-2`}>
-        {orders.map((order, index) => (
+        {orders.map((order) => (
           <Link
             className={styles.link}
             key={order._id}
