@@ -10,12 +10,14 @@ const modalRoot = document.querySelector("#react-modals");
 
 export default function Modal({ children, handleClose }) {
   const { title } = useSelector((state) => state.modal);
+
+  const handleEsc = (e) => {
+    if (e.key === "Escape") handleClose();
+  };
+
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === "Escape") handleClose();
-    };
     document.addEventListener("keydown", handleEsc);
-    return () => removeEventListener("keydown", handleEsc);
+    return () => document.removeEventListener("keydown", handleEsc);
   }, []);
 
   return ReactDOM.createPortal(
