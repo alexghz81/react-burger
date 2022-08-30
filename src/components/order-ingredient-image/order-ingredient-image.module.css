@@ -1,0 +1,41 @@
+.image_overlay {
+  filter: brightness(.7);
+}
+
+.pic_container{
+  width: 64px;
+  height: 64px;
+  position: relative;
+}
+
+.image {
+  background: #131316;
+  object-fit: cover;
+}
+
+.pic_border {
+  position: absolute;
+  display: flex;
+  margin: 0;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  box-sizing: border-box;
+  padding: 2px;
+  background-image: linear-gradient(to right, rgba(128, 26, 178, 1), rgba(76, 76, 255, 1));
+}
+
+.pic_border,
+.image {
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

@@ -3,7 +3,6 @@ import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 import { setActiveTab } from "../../services/reducers/tab-slice";

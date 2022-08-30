@@ -8,12 +8,14 @@ import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 import {
   Constructor,
   Login,
-  OrdersFeed,
   Profile,
   Register,
   ForgotPassword,
   ResetPassword,
   Logout,
+  Feed,
+  OrderInfo,
+  ProfileOrders,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
@@ -50,10 +52,7 @@ function App() {
           <Route path="/" exact>
             <Constructor />
           </Route>
-          <Route path="/orders-feed" exact>
-            <OrdersFeed />
-          </Route>
-          <ProtectedRoute path="/profile" exact>
+          <ProtectedRoute path="/profile" exact onlyGuest={false}>
             <Profile />
           </ProtectedRoute>
           <ProtectedRoute path="/login" onlyGuest={true} exact>
@@ -74,20 +73,53 @@ function App() {
           <Route path="/ingredients/:id" exact>
             <IngredientDetails />
           </Route>
+          <Route path="/feed" exact>
+            <Feed />
+          </Route>
+          <Route path="/feed/:id" exact>
+            <OrderInfo />
+          </Route>
+          <ProtectedRoute path="/profile/orders" exact onlyGuest={false}>
+            <ProfileOrders />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile/orders/:id" exact onlyGuest={false}>
+            <OrderInfo />
+          </ProtectedRoute>
           <Route path="*">
             <Error404 />
           </Route>
         </Switch>
-        {background && (
-          <Route
-            path="/ingredients/:id"
-            children={
-              <Modal handleClose={onClose}>
-                <IngredientDetails />
-              </Modal>
-            }
-          />
-        )}
+        {background &&
+          ((background.pathname === "/" && (
+            <Route
+              path="/ingredients/:id"
+              children={
+                <Modal handleClose={onClose}>
+                  <IngredientDetails />
+                </Modal>
+              }
+            />
+          )) ||
+            (background.pathname.includes("/feed") && (
+              <Route
+                path="/feed/:id"
+                children={
+                  <Modal handleClose={onClose}>
+                    <OrderInfo modal={true} />
+                  </Modal>
+                }
+              />
+            )) ||
+            (background.pathname.includes("/orders") && (
+              <Route
+                path="/profile/orders/:id"
+                children={
+                  <Modal handleClose={onClose}>
+                    <OrderInfo modal={true} />
+                  </Modal>
+                }
+              />
+            )))}
       </main>
     )
   );

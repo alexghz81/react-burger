@@ -1,9 +1,9 @@
 import React from "react";
-import styles from "./order-details.module.css";
+import styles from "./order-confirm.module.css";
 import done from "../../assets/images/done.png";
 import { useSelector } from "react-redux";
 
-export default function OrderDetails() {
+export default function OrderConfirm() {
   const { number, hasError, errorMessage } = useSelector(
     (state) => state.order
   );
