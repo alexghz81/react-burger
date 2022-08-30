@@ -35,7 +35,7 @@ const OrderInfo = ({ modal = false }) => {
         )
       );
     }
-    // return () => wsConnected && dispatch(wsConnectionClosed());
+    return () => wsConnected && dispatch(wsConnectionClosed());
   }, [dispatch]);
 
   const getOrder = () => {
