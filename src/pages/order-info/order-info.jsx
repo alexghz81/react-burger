@@ -26,7 +26,7 @@ const OrderInfo = ({ modal = false }) => {
   const [orderPrice, setOrderPrice] = useState();
 
   useEffect(() => {
-    if (!wsConnected) {
+    if (!wsConnected && !location.state?.background) {
       dispatch(
         wsConnectionStart(
           location.pathname.includes("orders")
@@ -35,8 +35,8 @@ const OrderInfo = ({ modal = false }) => {
         )
       );
     }
-    return () => wsConnected && dispatch(wsConnectionClosed());
-  }, [wsConnected, dispatch]);
+    // return () => wsConnected && dispatch(wsConnectionClosed());
+  }, [dispatch]);
 
   const getOrder = () => {
     if (!order) {
