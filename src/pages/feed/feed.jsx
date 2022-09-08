@@ -8,7 +8,7 @@ import {
 import { ORDERS_URL } from "../../utils/constants";
 import OrdersList from "../../components/orders-list/orders-list";
 import OrderStatus from "../../utils/order-status";
-import { divideOrdersArray } from "../../utils/utils";
+// import { divideOrdersArray } from "../../utils/utils";
 import OrderNumber from "../../components/order-number/order-number";
 
 const Feed = () => {

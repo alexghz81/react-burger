@@ -3,19 +3,20 @@ import styles from "./burger-ingredients.module.css";
 import Title from "../title/title";
 import IngredientTabs from "../ingredient-tabs/ingredient-tabs";
 import IngredientsSection from "../ingredients-section/ingredients-section";
-import { useDispatch, useSelector } from "react-redux";
 import { useInView } from "react-intersection-observer";
 import { setActiveTab } from "../../services/reducers/tab-slice";
+import { useAppDispatch, useAppSelector } from "../../services/hook";
+import { IIngredient } from "../../services/types/data";
 
-const BurgerIngredients = () => {
-  const { allIngredients, hasError, errorMessage } = useSelector(
+const BurgerIngredients: React.FC = () => {
+  const { allIngredients, hasError, errorMessage } = useAppSelector(
     (state) => state.ingredients
   );
-  const { ingredients: constructorIngredients, bun } = useSelector(
+  const { ingredients: constructorIngredients, bun } = useAppSelector(
     (state) => state.burgerConstructor
   );
-  const container = useRef();
-  const dispatch = useDispatch();
+  const container = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
   const [buns, inViewBuns] = useInView({
     threshold: 0.4,
   });
@@ -37,28 +38,28 @@ const BurgerIngredients = () => {
   }, [inViewBuns, inViewSauces, inViewMains]);
 
   const mainIngredientsArray = useMemo(
-    () => allIngredients.filter((el) => el.type === "main"),
+    () => allIngredients.data.filter((el: IIngredient) => el.type === "main"),
     [allIngredients]
   );
   const bunIngredientsArray = useMemo(
-    () => allIngredients.filter((el) => el.type === "bun"),
+    () => allIngredients.data.filter((el: IIngredient) => el.type === "bun"),
     [allIngredients]
   );
   const sauceIngredientsArray = useMemo(
-    () => allIngredients.filter((el) => el.type === "sauce"),
+    () => allIngredients.data.filter((el: IIngredient) => el.type === "sauce"),
     [allIngredients]
   );
 
-  const handleScroll = (tab) => {
+  const handleScroll = (tab: string) => {
     const element = document.getElementById(tab);
     element && element.scrollIntoView({ behavior: "smooth" });
   };
 
-  const numberOfIngredient = (id, type) => {
+  const numberOfIngredient = (id: string, type: string) => {
     let result = Object.values(constructorIngredients).filter(
-      (el) => el._id === id
+      (el: IIngredient) => el._id === id
     ).length;
-    if (type === "bun") {
+    if (bun && type === "bun") {
       result = bun._id === id ? 2 : 0;
     }
     return result;

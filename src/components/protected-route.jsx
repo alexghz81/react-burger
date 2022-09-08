@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
@@ -16,6 +16,7 @@ const ProtectedRoute = ({ onlyGuest = false, children, ...rest }) => {
     );
   }
 
+  useEffect(() => {});
   if (!onlyGuest && !isAuthChecked) {
     return (
       <Route {...rest}>

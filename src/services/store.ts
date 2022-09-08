@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import ingredientsReducer from "./reducers/ingredients-slice";
 import constructorReducer from "./reducers/constructor-slice";
 import orderReducer from "./reducers/order-slice";
@@ -24,6 +24,9 @@ import {
   wsAuthConnectionStart,
 } from "./reducers/ws-slice";
 import { socketMiddleware } from "./socketMiddleware";
+import { buildThunks as ReturnType } from "@reduxjs/toolkit/src/query/core/buildThunks";
+import { Reducer } from "redux";
+import logger from "redux-logger";
 
 const wsActions = {
   onStart: wsConnectionStart,
@@ -43,23 +46,37 @@ const wsAuthActions = {
   onSendMessage: wsSendMessage,
 };
 
-export default configureStore({
-  reducer: {
-    ingredients: ingredientsReducer,
-    burgerConstructor: constructorReducer,
-    order: orderReducer,
-    tab: tabReducer,
-    modal: modalReducer,
-    ingredient: ingredientReducer,
-    form: formReducer,
-    forgotPassword: forgotPasswordReducer,
-    resetPassword: resetPasswordReducer,
-    auth: loginReducer,
-    register: registerReducer,
-    ws: wsReducer,
-  },
+const reducers = {
+  ingredients: ingredientsReducer,
+  burgerConstructor: constructorReducer,
+  order: orderReducer,
+  tab: tabReducer,
+  modal: modalReducer,
+  ingredient: ingredientReducer,
+  form: formReducer,
+  forgotPassword: forgotPasswordReducer,
+  resetPassword: resetPasswordReducer,
+  auth: loginReducer,
+  register: registerReducer,
+  ws: wsReducer,
+};
+
+const combinedReducer = combineReducers<typeof reducers>(reducers);
+
+export const rootReducer: Reducer<RootState> = (state, action) => {
+  return combinedReducer(state, action);
+};
+
+const store = configureStore({
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false })
       .concat(socketMiddleware(wsActions))
-      .concat(socketMiddleware(wsAuthActions)),
+      .concat(socketMiddleware(wsAuthActions))
+      .concat(logger),
 });
+
+export default store;
+
+export type RootState = ReturnType<typeof combinedReducer>;
+export type AppDispatch = typeof store.dispatch;

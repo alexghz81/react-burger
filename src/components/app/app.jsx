@@ -4,27 +4,28 @@ import styles from "./app.module.css";
 import AppHeader from "../app-header/app-header";
 import Modal from "../hocs/modal/modal";
 import IngredientDetails from "../ingredient-details/ingredient-details";
-import { Switch, Route, useHistory, useLocation } from "react-router-dom";
+import { Route, Switch, useHistory, useLocation } from "react-router-dom";
 import {
   Constructor,
-  Login,
-  Profile,
-  Register,
-  ForgotPassword,
-  ResetPassword,
-  Logout,
   Feed,
+  ForgotPassword,
+  Login,
+  Logout,
   OrderInfo,
+  Profile,
   ProfileOrders,
+  Register,
+  ResetPassword,
 } from "../../pages";
 import { Error404 } from "../../pages/error-page";
 import ProtectedRoute from "../protected-route";
 import { fetchUser } from "../../services/reducers/auth-slice";
 import { getCookie } from "../../utils/utils";
 import { fetchIngredients } from "../../services/reducers/ingredients-slice";
+import { useAppDispatch, useAppSelector } from "../../services/hook";
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
   const history = useHistory();
   const background = location.state?.background;

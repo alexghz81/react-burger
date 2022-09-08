@@ -5,7 +5,6 @@ import {
   ConstructorElement,
   CurrencyIcon,
 } from "@ya.praktikum/react-developer-burger-ui-components";
-import { useDispatch, useSelector } from "react-redux";
 import { useDrop } from "react-dnd";
 import {
   addIngredient,
@@ -17,11 +16,15 @@ import ConstructorItem from "../constructor-item/constructor-item";
 import { showModal } from "../../services/reducers/modal-slice";
 import { fetchOrder } from "../../services/reducers/order-slice";
 import { useHistory } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../services/hook";
+import { IIngredient } from "../../services/types/data";
 
 const BurgerConstructor = () => {
-  const { ingredients, bun } = useSelector((state) => state.burgerConstructor);
-  const dispatch = useDispatch();
-  const { isAuthChecked } = useSelector((state) => state.auth);
+  const { ingredients, bun } = useAppSelector(
+    (state) => state.burgerConstructor
+  );
+  const dispatch = useAppDispatch();
+  const { isAuthChecked } = useAppSelector((state) => state.auth);
   const history = useHistory();
   const [, drop] = useDrop({
     accept: "ingredient",
@@ -33,16 +36,24 @@ const BurgerConstructor = () => {
     },
   });
 
-  const ingredient = ingredients.filter((el) => el.type !== "bun");
-  const hasBun = useMemo(() => Object.keys(bun).length !== 0, [bun]);
-  const totalPrice = useMemo(() => {
-    return (
-      (hasBun ? bun.price * 2 : 0) +
-      ingredients.reduce((sum, el) => sum + el.price, 0)
-    );
+  const ingredient: Array<IIngredient> = ingredients.filter(
+    (el) => el.type !== "bun"
+  );
+  // const hasBun: boolean = useMemo(() => {
+  //   if (bun) {
+  //     return Object.keys(bun).length !== 0;
+  //   }
+  //   return false;
+  // }, [bun]);
+  const totalPrice: number = useMemo(() => {
+    if (bun) {
+      return bun.price * 2 + ingredients.reduce((sum, el) => sum + el.price, 0);
+    } else {
+      return ingredients.reduce((sum, el) => sum + el.price, 0);
+    }
   }, [ingredients, bun]);
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: string): void => {
     dispatch(removeIngredient(id));
   };
 
@@ -64,8 +75,10 @@ const BurgerConstructor = () => {
 
   const handleModal = () => {
     if (isAuthChecked) {
-      const orderIngredients = ingredients.map((el) => el._id);
-      if (bun._id) {
+      const orderIngredients: string[] = ingredients.map(
+        (el: IIngredient) => el._id
+      );
+      if (bun) {
         orderIngredients.push(bun._id);
         orderIngredients.push(bun._id);
       }
@@ -79,7 +92,7 @@ const BurgerConstructor = () => {
 
   return (
     <section className={`${styles.burger_constructor} pt-25`} ref={drop}>
-      {hasBun ? (
+      {bun ? (
         <ul
           className={`${styles.burger_constructor_item} ${styles.position_top}`}
         >
@@ -99,7 +112,7 @@ const BurgerConstructor = () => {
               <ConstructorItem
                 element={el}
                 handleDelete={handleDelete}
-                key={el.id}
+                key={el._id}
                 index={index}
                 findIngredient={findIngredient}
                 reorderIngredient={reorderIngredient}
@@ -108,7 +121,7 @@ const BurgerConstructor = () => {
           })}
         </ul>
       ) : (
-        !hasBun && (
+        !bun && (
           <div className={styles.empty_content}>
             <span className="text_type_main-default text_color_inactive">
               Перетащите сюда ингредиент, чтобы собрать заказ
@@ -116,7 +129,7 @@ const BurgerConstructor = () => {
           </div>
         )
       )}
-      {hasBun ? (
+      {bun ? (
         <ul
           className={`${styles.burger_constructor_item} ${styles.position_bottom}`}
         >

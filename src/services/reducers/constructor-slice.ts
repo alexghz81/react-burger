@@ -1,9 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
+import { IIngredient } from "../types/data";
 
-const initialState = {
+interface IConstructorIngredient extends IIngredient {
+  id: string;
+}
+
+interface IConstructorInitialState {
+  ingredients: IConstructorIngredient[];
+  bun: IIngredient | null;
+}
+
+const initialState: IConstructorInitialState = {
   ingredients: [],
-  bun: {},
+  bun: null,
 };
 
 const constructorSlice = createSlice({
@@ -17,8 +27,10 @@ const constructorSlice = createSlice({
         state.ingredients.push({ ...action.payload, id: uuid() });
       }
     },
-    removeIngredient(state, action) {
-      const index = state.ingredients.indexOf((el) => el.id === action.payload);
+    removeIngredient(state, action: PayloadAction<string>) {
+      const index: number = state.ingredients.findIndex(
+        (el: IConstructorIngredient) => el.id === action.payload
+      );
       state.ingredients.splice(index, 1);
     },
     reorderIngredients(state, action) {
@@ -31,7 +43,7 @@ const constructorSlice = createSlice({
     },
     resetConstructor(state) {
       state.ingredients = [];
-      state.bun = {};
+      state.bun = null;
     },
   },
 });

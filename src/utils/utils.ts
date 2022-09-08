@@ -1,5 +1,6 @@
 import { API_URL } from "./constants";
 import checkResponse from "./check-response";
+import { IFetchOptions, IIngredient } from "../services/types/data";
 
 export function getCookie(name) {
   const matches = document.cookie.match(
@@ -82,20 +83,20 @@ export const fetchWithRefresh = async (url, options) => {
   }
 };
 
-export const sortIngredients = (ingredients) => {
+export const sortIngredients = (ingredients: IIngredient[]) => {
   return ingredients.sort((a) => (a.type === "bun" ? -1 : 1));
 };
 
-export const divideOrdersArray = (ordersArray, callback) => {
-  let allOrders = [];
-  for (let j = 0; j < ordersArray.length; j += 10) {
-    let ordersColumn = [];
-    ordersColumn = ordersArray.slice(j, j + 10);
-    const ordersNumbersColumn = ordersColumn.map((item) => item.number);
-    allOrders.push(ordersNumbersColumn);
-  }
-  callback(allOrders);
-};
+// export const divideOrdersArray = (ordersArray, callback) => {
+//   let allOrders = [];
+//   for (let j = 0; j < ordersArray.length; j += 10) {
+//     let ordersColumn = [];
+//     ordersColumn = ordersArray.slice(j, j + 10);
+//     const ordersNumbersColumn = ordersColumn.map((item) => item.number);
+//     allOrders.push(ordersNumbersColumn);
+//   }
+//   callback(allOrders);
+// };
 
 export const getOrderByNumber = (number) => {
   return fetch(`${API_URL}/orders/${number}`, {

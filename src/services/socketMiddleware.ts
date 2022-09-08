@@ -1,7 +1,10 @@
-export const socketMiddleware = (wsActions) => {
-  return (store) => {
-    let socket = null;
-    return (next) => (action) => {
+import { IWsActions } from "./types/data";
+import { MiddlewareAPI } from "redux";
+
+export const socketMiddleware = (wsActions: IWsActions) => {
+  return (store: MiddlewareAPI) => {
+    let socket: WebSocket | null = null;
+    return (next: any) => (action: any) => {
       const { dispatch } = store;
       const { onStart, onSendMessage, onOpen, onClose, onError, onMessage } =
         wsActions;
@@ -30,8 +33,10 @@ export const socketMiddleware = (wsActions) => {
         };
 
         socket.onclose = (event) => {
-          dispatch(onClose(event));
-          socket.close();
+          if (socket) {
+            dispatch(onClose(event));
+            socket.close();
+          }
         };
 
         if (type === onSendMessage.toString()) {
