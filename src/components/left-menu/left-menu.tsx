@@ -1,12 +1,8 @@
 import React from "react";
 import styles from "./left-menu.module.css";
 import { NavLink } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { getCookie } from "../../utils/utils";
-import { fetchLogout } from "../../services/reducers/auth-slice";
 
 const LeftMenu = () => {
-  const dispatch = useDispatch();
   return (
     <div>
       <ul className={`${styles.items} pl-5`}>
