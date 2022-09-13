@@ -82,7 +82,6 @@ const BurgerIngredients: React.FC = () => {
         <div className="buns" ref={buns} id="buns">
           <IngredientsSection
             title={"Булки"}
-            type={"bun"}
             data={bunIngredientsArray}
             numberOfIngredient={numberOfIngredient}
           />
@@ -90,7 +89,6 @@ const BurgerIngredients: React.FC = () => {
         <div className="sauces" ref={sauces} id="sauces">
           <IngredientsSection
             title={"Соусы"}
-            type={"sauce"}
             data={sauceIngredientsArray}
             numberOfIngredient={numberOfIngredient}
           />
@@ -98,7 +96,6 @@ const BurgerIngredients: React.FC = () => {
         <div className="mains" ref={mains} id="mains">
           <IngredientsSection
             title={"Начинки"}
-            type={"main"}
             data={mainIngredientsArray}
             numberOfIngredient={numberOfIngredient}
           />

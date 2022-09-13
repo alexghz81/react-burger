@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { FC, useCallback, useMemo } from "react";
 import styles from "./burger-constructor.module.css";
 import {
   Button,
@@ -8,6 +8,7 @@ import {
 import { useDrop } from "react-dnd";
 import {
   addIngredient,
+  IConstructorIngredient,
   removeIngredient,
   reorderIngredients,
   resetConstructor,
@@ -19,7 +20,7 @@ import { useHistory } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../services/hook";
 import { IIngredient } from "../../services/types/data";
 
-const BurgerConstructor = () => {
+const BurgerConstructor: FC = (): JSX.Element => {
   const { ingredients, bun } = useAppSelector(
     (state) => state.burgerConstructor
   );
@@ -36,15 +37,9 @@ const BurgerConstructor = () => {
     },
   });
 
-  const ingredient: Array<IIngredient> = ingredients.filter(
+  const ingredient: Array<IConstructorIngredient> = ingredients.filter(
     (el) => el.type !== "bun"
   );
-  // const hasBun: boolean = useMemo(() => {
-  //   if (bun) {
-  //     return Object.keys(bun).length !== 0;
-  //   }
-  //   return false;
-  // }, [bun]);
   const totalPrice: number = useMemo(() => {
     if (bun) {
       return bun.price * 2 + ingredients.reduce((sum, el) => sum + el.price, 0);
@@ -58,7 +53,7 @@ const BurgerConstructor = () => {
   };
 
   const findIngredient = useCallback(
-    (id) => {
+    (id: string): { index: number } => {
       const ingredient = ingredients.filter((el) => el.id === id)[0];
       return { index: ingredients.indexOf(ingredient) };
     },
@@ -66,7 +61,7 @@ const BurgerConstructor = () => {
   );
 
   const reorderIngredient = useCallback(
-    (id, toIndex) => {
+    (id: string, toIndex: number) => {
       const { index } = findIngredient(id);
       dispatch(reorderIngredients({ index, toIndex }));
     },
@@ -107,13 +102,12 @@ const BurgerConstructor = () => {
       ) : null}
       {ingredients.length > 0 ? (
         <ul className={`${styles.burger_constructor_items} pl-4 pr-2`}>
-          {ingredient.map((el, index) => {
+          {ingredient.map((el) => {
             return (
               <ConstructorItem
                 element={el}
                 handleDelete={handleDelete}
-                key={el._id}
-                index={index}
+                key={el.id}
                 findIngredient={findIngredient}
                 reorderIngredient={reorderIngredient}
               />

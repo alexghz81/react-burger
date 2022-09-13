@@ -2,13 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuid } from "uuid";
 import { IIngredient } from "../types/data";
 
-interface IConstructorIngredient extends IIngredient {
+export interface IConstructorIngredient extends IIngredient {
   id: string;
 }
 
 interface IConstructorInitialState {
   ingredients: IConstructorIngredient[];
-  bun: IIngredient | null;
+  bun: IConstructorIngredient | null;
 }
 
 const initialState: IConstructorInitialState = {
@@ -34,7 +34,8 @@ const constructorSlice = createSlice({
       state.ingredients.splice(index, 1);
     },
     reorderIngredients(state, action) {
-      const { index, toIndex } = action.payload;
+      const { index, toIndex }: { index: number; toIndex: number } =
+        action.payload;
       state.ingredients.splice(
         index,
         0,

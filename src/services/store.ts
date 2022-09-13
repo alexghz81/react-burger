@@ -72,8 +72,8 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false })
       .concat(socketMiddleware(wsActions))
-      .concat(socketMiddleware(wsAuthActions))
-      .concat(logger),
+      .concat(socketMiddleware(wsAuthActions)),
+  // .concat(logger),
 });
 
 export default store;

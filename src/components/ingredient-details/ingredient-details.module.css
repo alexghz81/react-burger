@@ -4,10 +4,6 @@
   align-items: center;
 }
 
-.ingredient_name {
-
-}
-
 .ingredient_description {
   display: flex;
   gap: 20px;
@@ -24,4 +20,9 @@
 
 .ingredient_page_title {
   margin-top: 120px;
+}
+
+.ingredient_modal_title {
+  margin: 0;
+  align-self: start;
 }

@@ -16,15 +16,14 @@ export interface IIngredient {
   __v: number;
 }
 
-export interface IOrder {}
-
-export interface IFetchOptions {
-  method: string;
-  headers: {
-    Authorization: string;
-    [n: string]: string;
-  };
-  body?: string;
+export interface IOrder {
+  ingredients: string[];
+  _id: string;
+  status: string;
+  name: string;
+  number: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IWsActions {
@@ -35,3 +34,8 @@ export interface IWsActions {
   onError: Function;
   onMessage: Function;
 }
+
+export type TSetCookieProps = {
+  path?: string;
+  expires?: string | number;
+};

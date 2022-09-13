@@ -20,7 +20,6 @@ export const fetchIngredients = createAsyncThunk<
 >("ingredients/fetchIngredients", async function (_, { rejectWithValue }) {
   try {
     const response = await fetch(`${API_URL}ingredients`);
-    console.log("fetching");
     return await checkResponse(response);
   } catch (error) {
     return rejectWithValue(error.message);

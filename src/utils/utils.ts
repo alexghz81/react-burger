@@ -1,8 +1,14 @@
 import { API_URL } from "./constants";
 import checkResponse from "./check-response";
-import { IFetchOptions, IIngredient } from "../services/types/data";
+import { IIngredient, IOrder, TSetCookieProps } from "../services/types/data";
 
-export function getCookie(name) {
+type TRefreshDataResponse = {
+  success: boolean;
+  accessToken: string;
+  refreshToken: string;
+};
+
+export function getCookie(name: string) {
   const matches = document.cookie.match(
     new RegExp(
       "(?:^|; )" +
@@ -13,37 +19,46 @@ export function getCookie(name) {
   return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
-export function setCookie(name, value, props = {}) {
+export function setCookie(
+  name: string,
+  value: string | boolean | number,
+  props?: TSetCookieProps & {
+    [extraAttribute: string]: string | number | boolean | undefined;
+  }
+) {
   props = {
     path: "/",
     ...props,
   };
+
   let exp = props.expires;
-  if (typeof exp == "number" && exp) {
-    const d = new Date();
+  const d = new Date();
+
+  if (typeof exp === "number" && exp) {
     d.setTime(d.getTime() + exp * 1000);
-    exp = props.expires = d;
+    Number(d);
+    props.expires = exp;
   }
-  if (exp && exp.toUTCString) {
-    props.expires = exp.toUTCString();
+  if (exp && d.toUTCString) {
+    props.expires = d.toUTCString();
   }
   value = encodeURIComponent(value);
   let updatedCookie = name + "=" + value;
   for (const propName in props) {
     updatedCookie += "; " + propName;
-    const propValue = props[propName];
-    if (propValue !== true) {
+    const propValue: string | number | boolean | undefined = props[propName];
+    if (!propValue) {
       updatedCookie += "=" + propValue;
     }
   }
   document.cookie = updatedCookie;
 }
 
-export function deleteCookie(name) {
-  setCookie(name, null, { expires: -1 });
+export function deleteCookie(name: string) {
+  setCookie(name, false, { expires: -1 });
 }
 
-export const refreshToken = () => {
+export const refreshToken = (): Promise<Response> => {
   return fetch(`${API_URL}auth/token`, {
     method: "POST",
     headers: {
@@ -51,18 +66,19 @@ export const refreshToken = () => {
     },
     body: JSON.stringify({ token: getCookie("refreshToken") }),
   }).then((res) => {
-    return checkResponse(res);
+    return res;
   });
 };
 
-export const fetchWithRefresh = async (url, options) => {
+export const fetchWithRefresh = async (url: string, options: any) => {
   try {
-    const res = await fetch(url, options);
-    const data = await checkResponse(res);
-    return data;
+    const res: Response = await fetch(url, options);
+    return await checkResponse(res);
   } catch (err) {
     if (err.message === "jwt expired") {
-      const refreshData = await refreshToken();
+      const refreshData: TRefreshDataResponse = await checkResponse(
+        await refreshToken()
+      );
       if (!refreshData.success) {
         return Promise.reject(refreshData);
       }
@@ -75,8 +91,7 @@ export const fetchWithRefresh = async (url, options) => {
           authorization: refreshData.accessToken,
         },
       });
-      const data = await checkResponse(res);
-      return data;
+      return await checkResponse(res);
     } else {
       return Promise.reject(err);
     }
@@ -87,22 +102,25 @@ export const sortIngredients = (ingredients: IIngredient[]) => {
   return ingredients.sort((a) => (a.type === "bun" ? -1 : 1));
 };
 
-// export const divideOrdersArray = (ordersArray, callback) => {
-//   let allOrders = [];
-//   for (let j = 0; j < ordersArray.length; j += 10) {
-//     let ordersColumn = [];
-//     ordersColumn = ordersArray.slice(j, j + 10);
-//     const ordersNumbersColumn = ordersColumn.map((item) => item.number);
-//     allOrders.push(ordersNumbersColumn);
-//   }
-//   callback(allOrders);
-// };
-
-export const getOrderByNumber = (number) => {
-  return fetch(`${API_URL}/orders/${number}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(checkResponse);
+export const divideOrdersArray = (
+  ordersArray: IOrder[],
+  callback: Function
+) => {
+  let allOrders: number[][] = [];
+  for (let j = 0; j < ordersArray.length; j += 10) {
+    let ordersColumn: IOrder[] = [];
+    ordersColumn = ordersArray.slice(j, j + 10);
+    const ordersNumbersColumn = ordersColumn.map((item) => item.number);
+    allOrders.push(ordersNumbersColumn);
+  }
+  callback(allOrders);
 };
+
+// export const getOrderByNumber = (number) => {
+//   return fetch(`${API_URL}/orders/${number}`, {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   }).then(checkResponse);
+// };

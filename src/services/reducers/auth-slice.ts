@@ -1,4 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  AnyAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { API_URL } from "../../utils/constants";
 import checkResponse from "../../utils/check-response";
 import {
@@ -7,14 +12,20 @@ import {
   getCookie,
   setCookie,
 } from "../../utils/utils";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
-import { string } from "prop-types";
 
-enum MethodEnum {
-  GET = "GET",
-  POST = "POST",
-  PATCH = "PATCH",
+type TFetchLogoutResponse = {
+  success: string;
+  message: string;
+};
+
+interface TFetchUserResponse {
+  success: boolean;
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    email: string;
+    name: string;
+  };
 }
 
 interface IAuthInitialState {
@@ -37,82 +48,97 @@ const initialState: IAuthInitialState = {
   isAuthChecked: false,
 };
 
-export const fetchLogin = createAsyncThunk(
-  "auth/fetchLogin",
-  async function (form, { rejectWithValue }) {
-    try {
-      const response = await fetch(`${API_URL}auth/login`, {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-      return checkResponse(response);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+type TFetchLoginForm = {
+  email: string;
+  password: string;
+};
 
-export const fetchUser = createAsyncThunk(
-  "auth/fetchUser",
-  async function (_, { rejectWithValue }) {
-    try {
-      const response = await fetchWithRefresh(`${API_URL}auth/user`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${getCookie("accessToken")}`,
-        },
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
+export const fetchLogin = createAsyncThunk<
+  TFetchUserResponse,
+  TFetchLoginForm,
+  { rejectValue: string }
+>("auth/fetchLogin", async function (form, { rejectWithValue }) {
+  try {
+    const response = await fetch(`${API_URL}auth/login`, {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+    return checkResponse(response);
+  } catch (error) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
-export const fetchUpdateUser = createAsyncThunk(
-  "auth/fetchUpdateUser",
-  async function (form, { rejectWithValue }) {
-    try {
-      const response = await fetchWithRefresh(`${API_URL}auth/user`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${getCookie("accessToken")}`,
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify(form),
-      });
-      return response;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
+export const fetchUser = createAsyncThunk<
+  TFetchUserResponse,
+  undefined,
+  { rejectValue: string }
+>("auth/fetchUser", async function (_, { rejectWithValue }) {
+  try {
+    const response = await fetchWithRefresh(`${API_URL}auth/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    return rejectWithValue(error.message);
   }
-);
+});
 
-export const fetchLogout = createAsyncThunk(
-  "auth/fetchLogout",
-  async function (refreshToken: string, { rejectWithValue }) {
-    try {
-      const response = await fetch(`${API_URL}auth/logout`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: JSON.stringify({ token: refreshToken }),
-      });
-      deleteCookie("accessToken");
-      deleteCookie("refreshToken");
-      return checkResponse(response);
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
+interface IFetchUpdateUserForm {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export const fetchUpdateUser = createAsyncThunk<
+  TFetchUserResponse,
+  IFetchUpdateUserForm,
+  { rejectValue: string }
+>("auth/fetchUpdateUser", async function (form, { rejectWithValue }) {
+  try {
+    const response = await fetchWithRefresh(`${API_URL}auth/user`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${getCookie("accessToken")}`,
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(form),
+    });
+    return response;
+  } catch (error) {
+    return rejectWithValue(error.message);
   }
-);
+});
+
+export const fetchLogout = createAsyncThunk<
+  TFetchLogoutResponse,
+  void,
+  { rejectValue: string }
+>("auth/fetchLogout", async function (_, { rejectWithValue }) {
+  try {
+    const response = await fetch(`${API_URL}auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({ token: getCookie("refreshToken") }),
+    });
+    deleteCookie("accessToken");
+    deleteCookie("refreshToken");
+    return checkResponse(response);
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -123,12 +149,13 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchLogin.pending, (state) => {
-      state.request = true;
-      state.hasError = false;
-      state.errorMessage = null;
-    }),
-      builder.addCase(fetchLogin.fulfilled, (state, action) => {
+    builder
+      .addCase(fetchLogin.pending, (state) => {
+        state.request = true;
+        state.hasError = false;
+        state.errorMessage = null;
+      })
+      .addCase(fetchLogin.fulfilled, (state, action) => {
         state.request = false;
         state.email = action.payload.user.email;
         state.name = action.payload.user.name;
@@ -138,65 +165,52 @@ const authSlice = createSlice({
           action.payload.accessToken.split("Bearer ")[1]
         );
         setCookie("refreshToken", action.payload.refreshToken);
-      }),
-      builder.addCase(fetchLogin.rejected, (state) => {
-        state.request = false;
-        state.hasError = true;
-        state.errorMessage = "Ошибка авторизации!";
-      }),
-      builder.addCase(fetchUser.pending, (state) => {
+      })
+      .addCase(fetchUser.pending, (state) => {
         state.request = true;
         state.hasError = false;
         state.errorMessage = null;
-      }),
-      builder.addCase(fetchUser.fulfilled, (state, action) => {
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
         state.request = false;
         state.isAuthChecked = action.payload.success;
         state.name = action.payload.user.name;
         state.email = action.payload.user.email;
-      }),
-      // builder.addCase(fetchUser.rejected, (state, action) => {
-      //   state.request = false;
-      //   state.hasError = true;
-      //   state.errorMessage = action.payload;
-      // }),
-      builder.addCase(fetchLogout.pending, (state) => {
+      })
+      .addCase(fetchLogout.pending, (state) => {
         state.request = true;
         state.hasError = false;
         state.errorMessage = null;
-      }),
-      builder.addCase(fetchLogout.fulfilled, (state) => {
+      })
+      .addCase(fetchLogout.fulfilled, (state) => {
         state.request = false;
         state.name = "";
         state.email = "";
         state.isAuthChecked = false;
         deleteCookie("accessToken");
         deleteCookie("refreshToken");
-      }),
-      // builder.addCase(fetchLogout.rejected, (state, action) => {
-      //   state.request = false;
-      //   state.hasError = true;
-      //   state.errorMessage = action.payload;
-      // }),
-      builder.addCase(fetchUpdateUser.pending, (state) => {
+      })
+      .addCase(fetchUpdateUser.pending, (state) => {
         state.request = true;
         state.hasError = false;
         state.errorMessage = null;
-      }),
-      builder.addCase(fetchUpdateUser.fulfilled, (state, action) => {
+      })
+      .addCase(fetchUpdateUser.fulfilled, (state, action) => {
         state.request = false;
         state.name = action.payload.user.name;
         state.email = action.payload.user.email;
+      })
+      .addMatcher(isError, (state, action: PayloadAction<string>) => {
+        state.hasError = true;
+        state.errorMessage = action.payload;
+        state.request = false;
       });
-    // builder.addCase(fetchUpdateUser.rejected, (state, action) => {
-    //   state.request = false;
-    //   state.hasError = true;
-    //   if (typeof action.payload.message === "string") {
-    //     state.errorMessage = action.payload.message;
-    //   }
-    // });
   },
 });
 
 export const { setAuthPassword } = authSlice.actions;
 export default authSlice.reducer;
+
+function isError(action: AnyAction) {
+  return action.type.endsWith("rejected");
+}
